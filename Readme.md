@@ -6,12 +6,14 @@
 2. Create a workspace in a folder named `empty_ws`:
 > `sencha generate workspace empty_ws`
 
-3. Within the root folder of your workspace, execute the following to add the new framework:
+3. Within the root folder of your workspace, execute the following to add the new framework. This creates a folder named `ext` under the `skds` folder in the workspace with a key name `ext`.
 > `sencha framework add -key ext -source /Users/ipek/Documents/workspace/sencha/sdks/ext -path sdks/ext` 
-  This creates a folder named `ext` under the `skds` folder in the workspace with a key name `ext`.
-
+  
 4. Once you have a Workspace, generating apps can be done as before but using the `"ext" folder` in the workspace:
 > `sencha -sdk ./sdks/ext generate app UniversalApp universal-app`
+
+OR
+
 > `sencha -sdk ./sdks/ext generate app --universal UniversalApp universal-app`
 
    1. By default, this application will be a Universal Application.
@@ -19,9 +21,9 @@
    3. `UniversalApp` will be the `app name` and `app namespace`.
    4. The generated app is built immediately.
 
-
 4.1. Alternatively, the `--ext` switch can be used to pick the "ext" framework from the workspace without worrying about its path:
 > `sencha generate app -ext --classic ClassicApp classic-app`
+
 > `sencha generate app -ext --modern ModernApp modern-app`
 
 1. Add a new package
@@ -36,11 +38,11 @@ Most aspects of the build script behind `sencha app build` are controlled by pro
 In this case there are two kinds of properties: `configuration properties` and `build properties`.
 
 ## Configuration Properties
-`Sencha Cmd configuration properties` are available to the build script but also drive many other features of Sencha Cmd (like the compiler). 
+**Sencha Cmd configuration properties** are available to the build script but also drive many other features of Sencha Cmd (like the compiler). 
 
 To see the current set of configuration properties, run this command:
 > `sencha diag show`
-
+```
 [INF]                     buildenvironment.dir : /Users/ipek/Documents/workspace/sencha/empty_ws   
 [INF]                buildenvironment.load.dir : /Users/ipek/Documents/workspace/sencha/empty_ws   
 [INF]                           cmd.config.dir : /Users/ipek/bin/Sencha/Cmd/6.7.0.63               
@@ -71,72 +73,56 @@ To see the current set of configuration properties, run this command:
 [INF]                            workspace.dir : /Users/ipek/Documents/workspace/sencha/empty_ws   
 [INF]            workspace.frameworks.ext.path : /Users/ipek/Documents/workspace/sencha/empty_ws/sdks/ext
 [INF]         workspace.frameworks.ext.version : 6.7.0.161                                         
-[INF]                   workspace.packages.dir : /Users/ipek/Documents/workspace/sencha/empty_ws/packages/local,/Users/ipek/Documents/workspace/sencha/empty_ws/packages
+[INF]                   workspace.packages.dir : /Users/ipek/Documents/workspace/sencha/empty_ws/packages/local,/Users/ipek/Documents/workspace/sencha/empty_ws/packages                                      
 [INF]               workspace.packages.extract : /Users/ipek/Documents/workspace/sencha/empty_ws/packages/remote
+```
 
 ## Build Properties
 `The build script` defines many other properties that are specific to builds. These build properties are typically prefixed by "build.".
 
 To see the current values of these you can run this command from your app folder:
 > `cd modern-app/`
+
 > `sencha ant .props`
-[INF] [echoproperties] #Ant properties
-[INF] [echoproperties] #Tue Apr 16 10:16:46 EEST 2019
-[INF] [echoproperties] $'{'skip.progressive'}'=1
-[INF] [echoproperties] CR=\n
-[INF] [echoproperties] DSTAMP=20190416
-[INF] [echoproperties] TODAY=April 16 2019
-[INF] [echoproperties] TSTAMP=1016
-[INF] [echoproperties] ant.core.lib=/Users/ipek/bin/Sencha/Cmd/6.7.0.63/lib/ant-1.8.4.jar
-[INF] [echoproperties] ant.file=/Users/ipek/Documents/workspace/sencha/empty_ws/modern-app/build.xml
-[INF] [echoproperties] ant.file.Cordova=/Users/ipek/bin/Sencha/Cmd/6.7.0.63/ant/build/app/cordova-impl.xml
-[INF] [echoproperties] ant.file.ModernApp=/Users/ipek/Documents/workspace/sencha/empty_ws/modern-app/build.xml
-.......
-[INF] [echoproperties] app.dir=/Users/ipek/Documents/workspace/sencha/empty_ws/modern-app
-[INF] [echoproperties] app.environment=production
-.......
-[INF] [echoproperties] app.loader.cache=false
-[INF] [echoproperties] app.loader.cacheParam=_dc
-[INF] [echoproperties] app.manifest.bootstrap=bootstrap.json
+
+```
+[INF] [echoproperties] #Ant properties   
+[INF] [echoproperties] #Tue Apr 16 10:16:46 EEST 2019  
+.......   
+[INF] [echoproperties] app.dir=/Users/ipek/Documents/workspace/sencha/empty_ws/modern-app   
+[INF] [echoproperties] app.environment=production   
+.......   
+[INF] [echoproperties] app.loader.cache=false   
+[INF] [echoproperties] app.loader.cacheParam=_dc   
+[INF] [echoproperties] app.manifest.bootstrap=bootstrap.json   
 [INF] [echoproperties] app.manifest.name=app.json
-[INF] [echoproperties] app.microloader=/Users/ipek/bin/Sencha/Cmd/6.7.0.63/ant/build/app/Microloader.js
-[INF] [echoproperties] app.microloader.bootstrap=/Users/ipek/bin/Sencha/Cmd/6.7.0.63/ant/build/app/Microloader.js
-[INF] [echoproperties] app.microloader.development=development.js
-[INF] [echoproperties] app.microloader.dir=/Users/ipek/bin/Sencha/Cmd/6.7.0.63/ant/build/app
-[INF] [echoproperties] app.microloader.name=Microloader.js
-[INF] [echoproperties] app.microloader.path=/Users/ipek/bin/Sencha/Cmd/6.7.0.63/ant/build/app/Microloader.js
-[INF] [echoproperties] app.microloader.production=production.js
-[INF] [echoproperties] app.microloader.testing=testing.js
-[INF] [echoproperties] app.name=ModernApp
-[INF] [echoproperties] app.namespace=ModernApp
-[INF] [echoproperties] app.out.base=ModernApp-all
-[INF] [echoproperties] app.out.base.debug=ModernApp-all
-[INF] [echoproperties] app.out.css=/Users/ipek/Documents/workspace/sencha/empty_ws/build/production/ModernApp/resources/ModernApp-all.css
-[INF] [echoproperties] app.out.css.compressed=
-[INF] /Users/ipek/Documents/workspace/sencha/empty_ws/build/production/ModernApp/resources/ModernApp-all.css
-[INF] [echoproperties] app.out.css.name=ModernApp-all.css
-[INF] [echoproperties] app.out.css.prefix=ModernApp-all
-[INF] [echoproperties] app.out.css.rel=resources/ModernApp-all.css
-.......
-[INF] [echoproperties] app.production.cache.enable=true
-[INF] [echoproperties] app.production.compressor.type=yui
-[INF] [echoproperties] app.production.loader.cache=$'{'build.timestamp'}'
-[INF] [echoproperties] app.production.output.appCache.enable=true
-[INF] [echoproperties] app.production.output.appCache.path=cache.appcache
-[INF] [echoproperties] app.resources.dir=/Users/ipek/Documents/workspace/sencha/empty_ws/modern-app/resources
-.......
-[INF] [echoproperties] app.toolkit=modern
-[INF] [echoproperties] app.version=1.0.0.0
-.......
+[INF] [echoproperties] app.microloader=/Users/ipek/bin/Sencha/Cmd/6.7.0.63/ant/build/app/Microloader.js   
+[INF] [echoproperties] app.microloader.bootstrap=/Users/ipek/bin/Sencha/Cmd/6.7.0.63/ant/build/app/Microloader.js   
+[INF] [echoproperties] app.microloader.development=development.js   
+[INF] [echoproperties] app.microloader.dir=/Users/ipek/bin/Sencha/Cmd/6.7.0.63/ant/build/app   
+[INF] [echoproperties] app.microloader.name=Microloader.js   
+[INF] [echoproperties] app.microloader.path=/Users/ipek/bin/Sencha/Cmd/6.7.0.63/ant/build/app/Microloader.js   
+.......   
+[INF] [echoproperties] app.production.cache.enable=true   
+[INF] [echoproperties] app.production.compressor.type=yui   
+[INF] [echoproperties] app.production.loader.cache=$'{'build.timestamp'}'   
+[INF] [echoproperties] app.production.output.appCache.enable=true   
+[INF] [echoproperties] app.production.output.appCache.path=cache.appcache   
+[INF] [echoproperties] app.resources.dir=/Users/ipek/Documents/workspace/sencha/empty_ws/modern-app/resources   
+.......   
+[INF] [echoproperties] app.toolkit=modern   
+[INF] [echoproperties] app.version=1.0.0.0   
+.......   
+```
 
 ### Setting Build Properties
-There are many ways to `configure build properties`. The simplest way is to edit one of the build properties files. To decide which file to edit it is helpful to know the priority of each of these files and under what conditions they are loaded.
+There are many ways to *configure build properties*. The simplest way is to edit one of the build properties files. To decide which file to edit it is helpful to know the priority of each of these files and under what conditions they are loaded.
 
 - `"local.properties"` -- If present, this file is loaded first. This file is intended to be applied only locally (to the local machine). It should not be committed to source control to be used by others. These settings take priority over any properties defined in other properties files as well as the current configuration properties.
 
 - Sencha Cmd configuration properties
 
--`".sencha/app/${build.environment}.properties"`
+- `".sencha/app/${build.environment}.properties"`
   ".sencha/app/native.properties"
   ".sencha/app/package.properties"
   ".sencha/app/production.properties"
@@ -145,6 +131,4 @@ There are many ways to `configure build properties`. The simplest way is to edit
 - `".sencha/app/build.properties"`    
     - => ⁨Users⁩/ipek⁩/bin⁩/Sencha⁩/Cmd⁩/6.7.0.63⁩/ant⁩/build⁩/app⁩/build.properties
 - `".sencha/app/defaults.properties"`
-  - => Users⁩/ipek⁩/bin⁩/Sencha⁩/Cmd⁩/6.7.0.63⁩/ant⁩/build⁩/app⁩/defaults.properties
-
-
+    - => Users⁩/ipek⁩/bin⁩/Sencha⁩/Cmd⁩/6.7.0.63⁩/ant⁩/build⁩/app⁩/defaults.properties
