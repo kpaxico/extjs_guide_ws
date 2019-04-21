@@ -236,3 +236,36 @@ Sencha Cmd v6.7.0.63
 }
 ```
 
+# Changing the place of generated files for develeopment (move them under the folder named 'generated files')
+
+- In app.json, make the following changes:
+```
+    "bootstrap": {
+        "base": "${app.dir}",
+        
+        "manifest": "generatedFiles/bootstrap.json",
+        "microloader": "generatedFiles/bootstrap.js",
+        "css": "generatedFiles/bootstrap.css"
+    },
+```
+Do not make the same changes for the `"output"` entry which affects the **production** build.
+
+- In index.html, add *generatedFiles* path to access the new location of generated bootstrap.js:
+<script id="microloader" data-app="e7018031-9938-41da-a115-a7dd540f9a6d" type="text/javascript" src="generatedFiles/bootstrap.js"></script> 
+
+# Move production builds to our local Sites folder:
+
+- Change/Add the **"base"** entry as the following:
+
+```
+    /**
+     * Settings specific to production builds.
+     */
+    "production": {
+        "output": {
+            "base": "/Users/ipek/Sites/sencha/${app.name}",
+            "appCache": {
+                "enable": false,
+                "path": "cache.appcache"
+            }
+```
