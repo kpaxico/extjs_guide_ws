@@ -2,7 +2,7 @@
     /**
      * The name of the package.
      */
-    "name": "core",
+    "name": "lib-utils",
 
     "sencha": {
         /**
@@ -17,7 +17,7 @@
           * As a general rule, all classes that belong to this package should be under this namespace
           * if multiple namespaces are part of this package, set this to "".
           */
-         "namespace": "core",
+         "namespace": "Lib.utils",
 
         /**
          * The package type.
@@ -115,15 +115,15 @@
         "sass" : {
             /**
              * The namespace to which this package's SASS corresponds. The default value of
-             * "core" means that the files in ./sass/src (and ./sass/var) match classes in
-             * the core" root namespace. In other words, "core.panel.Panel" maps to
+             * "Lib.utils" means that the files in ./sass/src (and ./sass/var) match classes in
+             * the Lib.utils" root namespace. In other words, "Lib.utils.panel.Panel" maps to
              * ./sass/src/panel/Panel.scss.
              *
              * To style classes from any namespace, set this to blank. If this is blank,
-             * then to style "core.panel.Panel" you would put SASS in
-             * ./sass/src/core/panel/Panel.scss.
+             * then to style "Lib.utils.panel.Panel" you would put SASS in
+             * ./sass/src/Lib.utils/panel/Panel.scss.
              */
-            "namespace": "core",
+            "namespace": "Lib.utils",
 
             /**
              * Comma-separated list of files or folders containing extra Sass. These

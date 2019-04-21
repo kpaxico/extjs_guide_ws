@@ -274,8 +274,9 @@
      */
     "production": {
         "output": {
+            "base": "/Users/ipek/Sites/sencha/${app.name}",
             "appCache": {
-                "enable": true,
+                "enable": false,
                 "path": "cache.appcache"
             }
         },
@@ -334,9 +335,10 @@
      */
     "bootstrap": {
         "base": "${app.dir}",
-
-        "microloader": "bootstrap.js",
-        "css": "bootstrap.css"
+        
+        "manifest": "generatedFiles/bootstrap.json",
+        "microloader": "generatedFiles/bootstrap.js",
+        "css": "generatedFiles/bootstrap.css"
     },
 
     /**
@@ -390,7 +392,12 @@
         "appCache": {
             "enable": false
         }
-    },
+        // Do not put 'generated files' for production, under the /generatedFiles folder.
+        // Do this only for development.
+
+        //,"manifest": "generatedFiles/app.json",
+        //"js": "generatedFiles/app.js"
+      },
 
     /**
     * Controls for localStorage caching

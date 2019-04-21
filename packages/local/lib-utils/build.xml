@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project name="core" default=".help">
+<project name="lib-utils" default=".help">
 
     <script language="javascript">
         <![CDATA[

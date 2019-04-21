@@ -132,3 +132,95 @@ There are many ways to *configure build properties*. The simplest way is to edit
     - => ⁨Users⁩/ipek⁩/bin⁩/Sencha⁩/Cmd⁩/6.7.0.63⁩/ant⁩/build⁩/app⁩/build.properties
 - `".sencha/app/defaults.properties"`
     - => Users⁩/ipek⁩/bin⁩/Sencha⁩/Cmd⁩/6.7.0.63⁩/ant⁩/build⁩/app⁩/defaults.properties
+
+# Building a package
+
+Go to the package directory and run:
+> `sencha package build`
+
+1. If a package is empty (does not have any toolkit, theme, or `ext` framework dependency) build will succeed.
+```
+kmac:utils ipek$ sencha package build
+Sencha Cmd v6.7.0.63
+[INF] Processing Build Descriptor : default
+[INF] Loading compiler context
+[INF] Processing data with ClosureCompressor
+[INF] JavaScript input level is NEXT and output level is ES5
+[INF] Writing concatenated output to file /Users/ipek/Documents/workspace/sencha/empty_ws/packages/local/utils/build/utils-debug.js
+[INF] Processing data with CmdJavascriptCompressor
+[INF] JavaScript input level is NEXT and output level is ES5
+[INF] Writing concatenated output to file /Users/ipek/Documents/workspace/sencha/empty_ws/packages/local/utils/build/utils.js
+[INF] merging 1 input resources into /Users/ipek/Documents/workspace/sencha/empty_ws/packages/local/utils/build/resources
+[INF] merged 1 resources into /Users/ipek/Documents/workspace/sencha/empty_ws/packages/local/utils/build/resources
+[INF] merging 0 input resources into /Users/ipek/Documents/workspace/sencha/empty_ws/packages/local/utils/build
+[INF] merged 0 resources into /Users/ipek/Documents/workspace/sencha/empty_ws/packages/local/utils/build
+[INF] Processing examples in "/Users/ipek/Documents/workspace/sencha/empty_ws/packages/local/utils/examples" (/Users/ipek/Documents/workspace/sencha/empty_ws/packages/local/utils/examples)
+```
+   
+2. If not, following changes needed to be made in the `package.json` before building a package independently:
+```
+{
+    "name": "@<corporation>/<PACKAGE_NAME>",
+    "version": "2.0.0.0",
+    "sencha": {
+        "name": "<PACKAGE_NAME>",
+        "namespace": "<YOUR_NAMESPACE>",
+        "type": "code",
+        "alternateName": [
+            "<IF_IT_IS_ALTERNATE_NAME>"
+        ],
+        "framework": "ext", //Must match with ext name in your workspace
+        "toolkit": "classic", //WITHOUT THIS EXT MODULE IS MISSING
+        "theme": "theme-triton", // MANDATORY WITHOUT THIS CORE MODULE NOT COMPILE
+        "requires": [
+            "ext",
+            "core",
+            "ux"
+        ],
+        "creator": "<YOUR NAME>",
+        "summary": "<YOUR SUMMARY>",
+        "detailedDescription": "<YOUR SUMMARY>",
+        "version": "6.5.0", 
+        "compatVersion": "6.5.0",
+        "format": "1",
+        "sass": {
+            "namespace": "<YOUR_NAMESPACE>",
+            "etc": [
+                "${package.dir}/sass/etc/all.scss",
+                "${package.dir}/${toolkit.name}/sass/etc/all.scss"
+            ],
+            "var": [
+                "${package.dir}/sass/var",
+                "${package.dir}/${toolkit.name}/sass/var"
+            ],
+            "src": [
+                "${package.dir}/sass/src",
+                "${package.dir}/${toolkit.name}/sass/src"
+            ]
+        },
+        "output": {
+            "base": "${package.dir}/build",
+            "js": "..",
+            "sass": ""
+        },
+        "local": true,
+        "classpath": [
+            "${package.dir}/src",
+            "${package.dir}/${toolkit.name}/src"
+        ],
+        "overrides": [
+            "${package.dir}/overrides",
+            "${package.dir}/${toolkit.name}/overrides"
+        ],
+        "slicer": {
+            "js": [
+                {
+                    "path": "${package.dir}/sass/example/custom.js",
+                    "isWidgetManifest": true
+                }
+            ]
+        }
+    }
+}
+```
+

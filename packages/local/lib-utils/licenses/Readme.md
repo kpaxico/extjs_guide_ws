@@ -1,3 +1,3 @@
-# core/licenses
+# lib-utils/licenses
 
 This folder contains the supported licenses for third-party use.
