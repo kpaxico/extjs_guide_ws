@@ -156,8 +156,20 @@ Sencha Cmd v6.7.0.63
 [INF] merged 0 resources into /Users/ipek/Documents/workspace/sencha/empty_ws/packages/local/utils/build
 [INF] Processing examples in "/Users/ipek/Documents/workspace/sencha/empty_ws/packages/local/utils/examples" (/Users/ipek/Documents/workspace/sencha/empty_ws/packages/local/utils/examples)
 ```
-   
-2. If not, following changes needed to be made in the `package.json` before building a package independently:
+
+1. If a package is not empty  but does not have any toolkit, theme dependency we have to make following changes:
+   1. Remove sass folder
+   2. Modify package.json:
+      - Add "framework": "ext"
+      - Set "slicer": null
+      - Set "sass" : null
+      - Add to `ext` and `core` to the requires array:
+          "requires": [
+            "ext",
+            "core"
+          ]
+
+3. If not, following changes needed to be made in the `package.json` before building a package independently:
 ```
 {
     "name": "@<corporation>/<PACKAGE_NAME>",

@@ -3,6 +3,7 @@
   "sencha": {
     "namespace": "Lib.util",
     "type": "code",
+    "framework": "ext",
     "toolkit": "",
     "creator": "anonymous",
     "summary": "Short summary",
@@ -10,28 +11,10 @@
     "version": "1.0.0",
     "compatVersion": "1.0.0",
     "format": "1",
-    "slicer": {
-      "js": [
-        {
-          "path": "${package.dir}/sass/example/custom.js",
-          "isWidgetManifest": true
-        }
-      ]
-    },
+    "slicer": null,
     "output": "${package.dir}/build",
     "local": true,
-    "sass": {
-      "namespace": "Lib.util",
-      "etc": [
-        "${package.dir}/sass/etc/all.scss"
-      ],
-      "var": [
-        "${package.dir}/sass/var"
-      ],
-      "src": [
-        "${package.dir}/sass/src"
-      ]
-    },
+    "sass" : null,
     "classpath": [
       "${package.dir}/src"
     ],
@@ -43,6 +26,9 @@
         "${package.dir}/examples"
       ]
     },
-    "requires": []
+    "requires": [
+      "ext",
+      "core"
+    ]
   }
 }
