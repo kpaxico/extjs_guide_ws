@@ -294,6 +294,7 @@
      */
     "production": {
         "output": {
+            "base": "/Users/ipek/Sites/sencha/${app.name}",
             "appCache": {
                 "enable": true,
                 "path": "cache.appcache"
@@ -355,10 +356,10 @@
     "bootstrap": {
         "base": "${app.dir}",
 
-        "manifest": "${build.id}.json",
+        "manifest": "generatedFiles/${build.id}.json",
 
-        "microloader": "bootstrap.js",
-        "css": "bootstrap.css"
+        "microloader": "generatedFiles/bootstrap.js",
+        "css": "generatedFiles/bootstrap.css"
     },
 
     /**

@@ -236,7 +236,7 @@ Sencha Cmd v6.7.0.63
 }
 ```
 
-# Changing the place of generated files for develeopment (move them under the folder named 'generated files')
+# Changing the place of generated files for develeopment (move them under the folder named 'generatedFiles')
 
 - In app.json, make the following changes:
 ```
