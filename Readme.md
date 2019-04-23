@@ -170,7 +170,7 @@ Sencha Cmd v6.7.0.63
           ]
 
 3. If not, following changes needed to be made in the `package.json` before building a package independently:
-```
+```json
 {
     "name": "@<corporation>/<PACKAGE_NAME>",
     "version": "2.0.0.0",
@@ -239,7 +239,7 @@ Sencha Cmd v6.7.0.63
 # Changing the place of generated files for develeopment (move them under the folder named 'generatedFiles')
 
 - In app.json, make the following changes:
-```
+```json
     "bootstrap": {
         "base": "${app.dir}",
         
@@ -251,13 +251,14 @@ Sencha Cmd v6.7.0.63
 Do not make the same changes for the `"output"` entry which affects the **production** build.
 
 - In index.html, add *generatedFiles* path to access the new location of generated bootstrap.js:
+```html
 <script id="microloader" data-app="e7018031-9938-41da-a115-a7dd540f9a6d" type="text/javascript" src="generatedFiles/bootstrap.js"></script> 
-
+```
 # Move production builds to our local Sites folder:
 
 - Change/Add the **"base"** entry as the following:
 
-```
+```json
     /**
      * Settings specific to production builds.
      */
@@ -269,3 +270,258 @@ Do not make the same changes for the `"output"` entry which affects the **produc
                 "path": "cache.appcache"
             }
 ```
+
+# Application Folder structures
+
+## Cmd Apps
+
+### Classic/Modern
+    /${app.name}  
+      /app  
+        /model
+        /store
+        /view
+        Application.js
+        Application.scss
+      
+      /resources
+
+    app.js
+    app.json
+
+### Universal
+    /${app.name}  
+      /app  
+        /model
+        /store
+        /view
+        Application.js
+        Application.scss
+      
+      /resources
+
+      /classic
+        /resources
+        /src
+
+      /modern
+        /resources
+        /src
+
+    app.js
+    app.json
+
+## Open Tooling Apps
+
+Open tooling apps, even though they have one build profile, they have this profile defined in the `builds` configuration of `app.json`.
+
+It seems like, even though an app is generated as having a one toolkit or one platform, it is structurally more ready to be extended to add another toolkit/platform.
+
+### Classic/Modern
+    /${app.name}
+      /app
+        /desktop
+          /src
+            /model
+            /store
+            /view
+            /util
+            Application.js
+            Application.scss
+
+          /sass
+            src.scss
+            var.scss
+          
+          /overrides
+
+        /shared
+          /src
+            /model
+            /store
+            /view
+            /util
+
+          /sass
+            src.scss
+            var.scss
+          
+          /overrides
+      
+      /resources
+
+    app.js
+    app.json
+
+### Universal
+    /${app.name}
+      /app
+        /desktop
+          /src
+            /model
+            /store
+            /view
+            /util
+            Application.js
+            Application.scss
+
+          /sass
+            src.scss
+            var.scss
+          
+          /overrides
+
+        /phone
+          /src
+            /model
+            /store
+            /view
+            /util
+            Application.js
+            Application.scss
+
+          /sass
+            src.scss
+            var.scss
+          
+          /overrides
+
+        /shared
+          /src
+            /model
+            /store
+            /view
+            /util
+
+          /sass
+            src.scss
+            var.scss
+
+          /overrides
+      
+      /resources
+        /desktop
+        /phone
+        /shared
+
+    app.js
+    app.json
+
+# Inner Workings of Sencha Cmd
+
+## Microloader
+
+Dynamic loader for JS and CSS
+
+### The Manifest
+- `app.json`: Sencha Cmd transforms the content of `app.json` and passes on the resulting manifest to the Microloader to use at runtime. Lastly, Ext JS itself also consults the runtime manifest for configuration options.
+
+- `Ext.manifest`
+When you launch your application, you will find the **processed content of "app.json"** loaded as `Ext.manifest`.
+
+- The `script` Tag
+To use the Microloader, your page will need to contain the following `script` tag:
+```html
+<script id="microloader" data-app="12345" type="text/javascript" src="bootstrap.js"></script>
+```
+By default, this `script` tag **will be replaced** by the build process but is used **during development** to load the application. 
+The **data-app** atrribute should have been generated for you during app scaffold. This is a unique ID used in local storage to prevent data collision.
+
+#### `app.json` Defaults and Customization
+
+- indexHtmlPath
+This is the path to the application's HTML document (relative to the "app.json" file). By default this property is set to "index.html". If you server uses PHP, ASP, JSP or other technology, you can change this value to point at the proper file like so:
+  `indexHtmlPath": "../page.jsp`
+
+If you change this setting, you will likely also need to change your "output" options (see below).
+
+#### `js`
+An array of **descriptions of JavaScript code files to load**. By default, an Ext JS 6 application will have something like this:
+```json
+"js": [{
+    "path": "app.js",
+    "bundle": true
+}]
+```
+
+This entry specifies your application's **entry point**. The `bundle` flag indicates that when you run `sencha app build`, this entry should be replaced by **the concatenated output of the build**. You can add other files to this array like so:
+```json
+"js": [{
+    "path": "library1.js"
+    // "remote": false (defaults)
+},{
+    "path": "library2.js",
+    "remote": true
+},{
+    "path": "library3.js",
+    "includeInBundle": true
+},{
+    "path": "app.js",
+    "bundle": true
+}]
+```
+- `"library1.js"` would be assumed to **reside in your app folder** and **would then be copied to the build output folder**. The entry would remain in the manifest and be **loaded separately by the Microloader**.
+
+- To simply pass along the entry for the Microloader to load (and **not be copied** by the build process), add the "remote" property like for `"library2.js"`:
+
+- `"library3.js"` will be included in **the concatenated build output** and *removed from the runtime manifest*.
+
+**Note:** While you can add entries to this array, most dependencies will appear in `"requires"` statements in your code or in `requires` array in "app.json"  
+
+- "path": "path/to/script.js"  
+Path to file. If the file is local this must be a relative path from this app.json file.
+
+- "bundle": false  
+Set to true on one file to indicate that it should become the container for the concatenated classes.
+
+- "includeInBundle": false  
+Set to true to include this file in the concatenated classes.
+
+- "remote": false  
+Specify as true if this file is remote and should not be copied into the build folder. Defaults to false for a local file which will be copied.
+
+- "bootstrap": false  
+A value of true indicates that is a **development mode only** dependency.  
+These files will not be copied into the build directory or referenced in the generate app.json manifest for the microloader.
+
+- "update": ""  
+If not specified, this file will only be loaded once, and cached inside `localStorage` until this value is changed. You can specify:  
+    - "delta" to enable over-the-air delta update for this file
+    - "full" means full update will be made when this file changes
+
+**Examples:**
+- Cmd Classic/Modern
+```json
+"classpath": [
+    "app"
+],
+```
+- Cmd Universal  
+```json
+"classpath": [
+    "app",
+    "${toolkit.name}/src" // To include /classic/src
+],
+```
+
+#### `css`
+Your CSS assets are handled slightly different than JavaScript. This is because in a stock Sencha Cmd application, **CSS is compiled from the `.scss` source**. The initial content of the "css" property looks something like this:
+```json
+"css": [{
+    "path": "boostrap.css",
+    "bootstrap": true
+}],
+```
+- This CSS file is a simple stub that **imports a build** of your `"sass"` folder.
+- The `"bootstrap"` flag indicates that the entry is used **for development** but **should be removed from build output**. 
+- For a build, the **compiled CSS** file will be appended to the `"css" array` of the generated manifest.
+
+In an empty app, "bootstrap.css" imports the theme from the framework and looks something like this:
+`@import "..../ext-theme-neptune/build/ext-theme-neptune-all.css";`
+
+As you *build your app*, this file is updated to point at the **most recently built CSS file**. For example if you run `sencha app build`, the **production CSS file** will be *imported by "bootstrap.css"* like so:  
+`@import "..../build/..../app-all.css";`
+
+**My Note:**
+This doesn't seem true: production build has nothing to do with the update of *bootstrap.css*. Development build updates the *bootstrap.css*
+
