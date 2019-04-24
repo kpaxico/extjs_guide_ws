@@ -16,7 +16,8 @@
      *      ]
      */
     "requires": [
-        "font-awesome"
+        "font-awesome",
+        "lib-resource"
     ],
 
     /**

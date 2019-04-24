@@ -1075,6 +1075,107 @@ Similarly, the Triton theme could have overridden the image from Neptune but thi
 ### Code Packages
 Similar to themes, **code packages** can also contain resources. These resources are also copied into the `resources` build output folder. **To protect multiple, independently developed packages from colliding**, however, these resources are placed in a folder named by the **package name**.
 
-For example, let's visit the "arrow-button" package we generated above. This package should contain an image in its resources, which will assist in illustrating the package's resource management.
+> The following is implemented in the `classic-app` application and `lib-resource` package of this workspace.
+`lib-resource` package contains two images in its resources and has a structure that looks like this:
+```
+lib-resource
+  resources/
+      images/
+          arrow_green.png   # the arrow image used by this package
+          arrow_red.png   # the arrow image used by this package
+      ...
+    sass/
+    src/
+  package.json
+```
 
-Note: You can use the following arrows for your convenience if you're following along with this guide:
+Upon building your **application's production build** (classic-app), the package's resources are copied into the application build like so:
+```
+build/
+    production/
+        ClassicApp/
+            index.html    # the output page
+            resources/
+                lib-resource/   # the package's resource "sandbox"
+                    images/
+                       arrow_green.png
+                       arrow_red.png
+```
+Like it does with themes, the application **can override package resources** as well:
+
+As with themes, the application can override these resources as well:
+```
+  app/
+      view/
+      ...
+  resources/
+      arrow-button/
+          images/
+              arrow_green.png
+              arrow_red.png
+          images/
+              lib-resource/   # the package's resource "sandbox"
+                  images/
+                      bg_img.jpg    # override package's image
+  sass/
+  app.json
+```
+
+![](./classic-app/docs/app_res_override_pkg_res.png)
+
+## Package Resources
+
+As shown above, applications consume package resources and integrate them into their builds. This process is guided by the **package descriptor (`package.json`)** as is the process of building an individual package.
+
+### package.json
+
+The **package descriptor** is similar to the **application descriptor (`app.json`)**. This file is where the package author can configure resource locations and build output locations. For example:
+```json
+"output": "${package.dir}/build",
+```
+
+Similar to the `"output"` configuration from `app.json`, the above determines where package resources are copied during a **package build**. The `"resources"` object is **NOT present by default** in `"package.json"`, but **behaves as if this were present**:
+```json
+"resources": [{
+    "path": "resources"
+}]
+```
+This is the same object used by `app.json`.
+
+## Package Builds
+
+For a package to be easily consumed by non-Cmd applications, it must be built by running the following in the package directory:
+
+`sencha package build`
+
+_Unlike_ application builds, package builds **do NOT have the concept of an _environment_** like "production" or "testing". Instead a package build **produces both** _compressed, optimized code_ and _uncompressed, debuggable code_.
+
+![](./classic-app/docs/lib-resource-pkg-after-build.png)
+
+### package.json
+The contents of the "build" folder are then directly usable as script and link elements in applications that do not use Sencha Cmd.
+
+### Resource Paths
+The difference between the _package build_ and _application build_, as it relates to resources, is that **application builds create a _resource sandbox_ for the package's resources**. This means that **the relative path from the CSS file to the package's resources** will be **different** _between package builds and application builds_.
+
+In both `.scss` and `.js` code, there are API's that determine the proper path to a given resource. For example, the `lib-resource` package might have a `CSS` rule like this:
+```css
+.lib-resource-main {
+    background-image: url(get-resource-path('images/arrow.png'));
+}
+```
+
+- In the **package build**, `get-resource-path` will **NOT sandbox the resources**. 
+- When used in an **application build**, however, `get-resource-path` will **properly sandbox the package's resources**.
+
+In `JavaScript`, the `Ext.getResourcePath` API does the same job.
+```js
+image.setSrc(
+    Ext.getResourcePath('images/arrow-red.png', null, 'lib-resource')
+);
+```
+
+Unlike `get-resource-path`, the JavaScript equivalent method `Ext.getResourcePath`, **CANNOT determine the _package name_** by default and so it **MUST be provided**. This argument is only needed for **code packages**, however. **Theme packages** do **NOT need** this argument since **their resources are NOT sandboxed**.
+
+Note: The `null` second argument is the **resource pool name**, which is not used in this case. It is more commonly used by **universal applications**.
+
