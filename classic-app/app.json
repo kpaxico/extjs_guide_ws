@@ -389,8 +389,16 @@
 
     "output": {
         "base": "${workspace.build.dir}/${build.environment}/${app.name}",
+        // "page": {
+        //   "path": "../../../${workspace.apps.1}/index.html",
+        //   "enable": false
+        // },
         "appCache": {
             "enable": false
+        },
+        "microloader": {
+          "path": "microloader.js",
+          "embed": false
         }
         // Do not put 'generated files' for production, under the /generatedFiles folder.
         // Do this only for development.

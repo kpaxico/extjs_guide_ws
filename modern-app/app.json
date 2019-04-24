@@ -256,12 +256,12 @@
      "loader": {
          // This property controls how the loader manages caching for requests:
          //
-         //   - true: allows requests to receive cached responses
+         //   - true: allows requests to receive cached responses (removes _dc cache buster)
          //   - false: disable cached responses by adding a random "cache buster"
          //   - other: a string (such as the build.timestamp shown here) to allow
          //     requests to be cached for this build.
          //
-         "cache": false,
+         "cache": "${build.timestamp}",
 
          // When "cache" is not true, this value is the request parameter used
          // to control caching.

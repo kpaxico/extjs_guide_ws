@@ -1,0 +1,142 @@
+{
+  "packages": {
+    "classic": {
+      "css": true,
+      "included": true,
+      "language": {
+        "js": {
+          "input": {
+            "version": "ES5"
+          }
+        }
+      },
+      "namespace": "Ext",
+      "required": true,
+      "requires": ["ext", "core"],
+      "version": "6.6.0"
+    },
+    "cmd": {
+      "version": "6.7.0.63"
+    },
+    "core": {
+      "css": true,
+      "included": true,
+      "required": true,
+      "requires": ["ext", "classic"],
+      "version": "6.6.0"
+    },
+    "ext": {
+      "css": true,
+      "included": true,
+      "language": {
+        "js": {
+          "input": {
+            "version": "ES5"
+          }
+        }
+      },
+      "license": "dev",
+      "namespace": "Ext",
+      "required": true,
+      "requires": [],
+      "version": "6.7.0.210"
+    },
+    "font-awesome": {
+      "css": true,
+      "included": true,
+      "namespace": "Ext",
+      "required": true,
+      "requires": ["ext", "core", "classic", "theme-base", "theme-neutral",
+        "theme-neptune"
+      ],
+      "theme": "theme-neptune",
+      "version": "4.7.0"
+    },
+    "font-ext": {
+      "css": true,
+      "included": true,
+      "namespace": "Ext",
+      "required": true,
+      "requires": ["ext", "core", "classic", "theme-base", "theme-neutral",
+        "theme-neptune"
+      ],
+      "theme": "theme-neptune",
+      "version": "6.6.0"
+    },
+    "theme-base": {
+      "css": true,
+      "included": true,
+      "namespace": "Ext",
+      "required": true,
+      "requires": ["ext", "core", "classic"],
+      "version": "6.6.0"
+    },
+    "theme-neptune": {
+      "css": true,
+      "extend": "theme-neutral",
+      "included": true,
+      "namespace": "Ext",
+      "required": true,
+      "requires": ["ext", "core", "classic", "theme-base", "theme-neutral"],
+      "version": "6.6.0"
+    },
+    "theme-neutral": {
+      "css": true,
+      "extend": "theme-base",
+      "included": true,
+      "namespace": "Ext",
+      "required": true,
+      "requires": ["ext", "core", "classic", "theme-base"],
+      "version": "6.6.0"
+    },
+    "theme-triton": {
+      "css": true,
+      "extend": "theme-neptune",
+      "included": true,
+      "namespace": "Ext",
+      "required": true,
+      "requires": ["ext", "core", "classic", "theme-base", "theme-neutral",
+        "theme-neptune", "font-awesome", "font-ext"
+      ],
+      "version": "6.6.0"
+    }
+  },
+  "js": [{
+    "path": "app.js"
+  }],
+  "css": [{
+    "remote": false,
+    "exclude": ["fashion"],
+    "path": "resources/ClassicApp-all_1.css"
+  }, {
+    "remote": false,
+    "exclude": ["fashion"],
+    "path": "resources/ClassicApp-all_2.css"
+  }],
+  "cache": {
+    "enable": true,
+    "deltas": true
+  },
+  "fashion": {
+    "inliner": {
+      "enable": false
+    },
+    "missingParameters": "error"
+  },
+  "name": "ClassicApp",
+  "namespace": "ClassicApp",
+  "version": "1.0.0.0",
+  "framework": "ext",
+  "toolkit": "classic",
+  "theme": "theme-triton",
+  "loader": {
+    "cache": "20190423042438",
+    "cacheParam": "_dc"
+  },
+  "id": "ff967f2b-e7e3-47ad-8ff2-19eb2f1933fc",
+  "hash": "b9eac06d6bd5e1b3fa11b3552d6fa82c8dc028f1",
+  "profile": "",
+  "resources": {
+    "path": "resources"
+  }
+}

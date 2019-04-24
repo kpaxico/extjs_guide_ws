@@ -429,7 +429,7 @@ The **data-app** atrribute should have been generated for you during app scaffol
 
 #### `app.json` Defaults and Customization
 
-- indexHtmlPath
+#### indexHtmlPath
 This is the path to the application's HTML document (relative to the "app.json" file). By default this property is set to "index.html". If you server uses PHP, ASP, JSP or other technology, you can change this value to point at the proper file like so:
   `indexHtmlPath": "../page.jsp`
 
@@ -516,12 +516,467 @@ Your CSS assets are handled slightly different than JavaScript. This is because 
 - The `"bootstrap"` flag indicates that the entry is used **for development** but **should be removed from build output**. 
 - For a build, the **compiled CSS** file will be appended to the `"css" array` of the generated manifest.
 
-In an empty app, "bootstrap.css" imports the theme from the framework and looks something like this:
+- In an empty app, "bootstrap.css" imports the theme from the framework and looks something like this:
 `@import "..../ext-theme-neptune/build/ext-theme-neptune-all.css";`
 
-As you *build your app*, this file is updated to point at the **most recently built CSS file**. For example if you run `sencha app build`, the **production CSS file** will be *imported by "bootstrap.css"* like so:  
+- As you *build your app*, this file is updated to point at the **most recently built CSS file**. For example if you run `sencha app build`, the **production CSS file** will be *imported by "bootstrap.css"* like so:  
 `@import "..../build/..../app-all.css";`
 
 **My Note:**
-This doesn't seem true: production build has nothing to do with the update of *bootstrap.css*. Development build updates the *bootstrap.css*
+This doesn't seem true: production build has nothing to do with the update of *bootstrap.css*. Instead **development build** updates the *bootstrap.css*:  
+`@import '../build/development/ModernApp/resources/ModernApp-all.css';`
 
+- The "css" entries also support the `remote` property. When **remote is NOT set** they operate in the same way as "js" entries in that they are **copied to the build output folder**.
+
+#### output
+The "output" object gives you the ability to control where and how build outputs are generated. This object can control many aspects of the build output. In our use of indexHtmlPath above, we told Sencha Cmd that the source for the page was "../page.jsp". To complete this process, we use output to tell Sencha Cmd where the built page will reside relative to the built JavaScript and CSS. To maintain the same relative arrangement as in the source tree, we would add this to "app.json":
+```json
+"output": {
+    "page": {
+        "path": "../page.jsp",
+        "enable": false
+    },
+    appCache: {
+        "enable": false
+    },
+    "manifest": {
+        "name": "bootstrap.js"
+    }
+}
+```
+In this case, we've also added "enable" and set it to false. This combination tells Sencha Cmd *where the final page will be but also **not to generate it by copying the source** (as specified by "indexHtmlPage").
+
+Since we are not generating the page, the Microloader script tag will contain the same "src" value of "bootstrap.js". The "manifest" option above instructs Sencha Cmd to generate the built Microloader using the same name. This is a common need for server-side template environments like JSP or ASP, but also others.
+
+#### Application Cache (`appCache`)
+
+The *Application cache* is **a manifest** used to determine **what assets the browser should store for offline access**. To enable this simply toggle the `enable` flag for the `appCache` property inside your output object. For example:
+```json
+"output": {
+    "page": "index.html",
+    "appCache": {
+        "enable": true
+    }
+}
+```
+The `appCache` property seen here is used to determine if the build process will generate an Application Cache Manifest file. If this is set to *true* the manifest will be generated from the **top level** appCache config object in your app.json. It will look something like this:
+
+```json
+"appCache": {
+    "cache": [
+        "index.html"
+    ],
+    "network": [
+        "*"
+    ],
+    "fallback": []
+}
+```
+#### Local Storage Cache
+
+The Local Storage Caching system is a seperate **offline caching system** from the browsers built in Application Cache.
+- Assets are stored in Local Storage via *unique keys* and during bootstrap these assets will be requested first before attempting any remote loading. 
+- This allows for applications to be loaded very fast and without an internet connection. 
+- This cache also allows for **delta patching** of assets which means that only the changed bits of your assets, css or js, will be loaded over the network. The file will then be **patched in local storage** and delievered to the user.
+
+This cache is enabled per asset via the `update` propety. This can be set to either `"full"` or `"delta"`. Below is an example of JS and CSS assets both with Local Storage Caching enabled.
+
+```json
+// app.js will be delta patched on updates
+"js": [
+    {
+        "path": "app.js",
+        "bundle": true,
+        "update": "delta"
+    }
+],
+// app.css will be fully downloaded on updates
+"css": [
+    {
+        "path": "app.css",
+        "update": "full"
+    }
+]
+```
+
+Once *Local Storage Caching* has been **enabled on an asset** one must **_globally_ enable** the cache config `"app.json"`. 
+- Normally during *development builds* one will want this set to *false* and in *production builds* this would be set to *true*.
+```json
+"cache": {
+    "enable": false
+}
+```
+
+One can also configure the path and generation of **deltas**. When the deltas property is set to a *truthy* value all assets using Local Storage Caching will have deltas generated into the builds `"deltas"` folder. If deltas is set to a string, the value will be used as the **folder name** that all patch files will be saved into. The `delta` toggle will have no effect if `enable` is set to *false*.
+
+"cache": {
+    "enable": true,
+    "deltas": true
+}
+
+- Both **Application Cache** and **Local Storage Cache** will **instantly load files for _offline access_**. Because of this **updated files will NOT be loaded into the users current application experience**. 
+
+- Once the Microloader has detected and loaded new Application Cache or Local Storage files, it will **dispatch a global event** allowing you to prompt the user to reload the application for the latest updates. You can listen for this event by adding the following code to your application:
+
+```js
+Ext.application({
+    name: 'MyApp',
+    mainView: 'MyMainView',
+    onAppUpdate: function () {
+      Ext.Msg.confirm('Application Update', 'This application has an update, reload?',
+          function (choice) {
+              if (choice === 'yes') {
+                  window.location.reload();
+              }
+          }
+    );
+}
+```
+
+#### Build Profiles
+When an application has *multiple variations*, we can add a `“builds”` object to "app.json" to describe the desired builds like this (taken from Kitchen Sink):
+```json
+"builds": {
+    "classic": {
+        "theme": "ext-theme-classic"
+    },
+    "gray": {
+        "theme": "ext-theme-gray"
+    },
+    "access": {
+        "theme": "ext-theme-access"
+    },
+    "crisp": {
+        "theme": "ext-theme-crisp"
+    },
+    "neptune": {
+        "theme": "ext-theme-neptune"
+    }
+}
+```
+_Each key_ in “builds” is called a **"build profile"**. The value is a set of property overrides that are applied to the base content of "app.json" to produce the output manifest as described below. In this case, the `“theme”` property is all that is being modified for each build profile.
+
+There are **two optional properties** that are common variations for application builds: `“locales”` and `“themes”`. These are used to automate the process of producing the final build profiles. For example, Kitchen Sink uses “locales”:
+```json
+"locales": [
+    "en",
+    "he"
+],
+```
+
+When `“locales”` or `“themes”` are given, **each of the values are combined with each of the entries** in “builds” to produce the final manifests. In this case **“neptune-en”**, **"neptune-he"**, **“crisp-en”**, etc. are the final build profile names.
+
+Here is an example of the **build profiles** for a universal application using just `modern` toolkit:
+```json
+  "builds": {
+    "desktop": {
+      "toolkit": "modern",
+      "theme": "theme-material",
+      "sass": {
+        "generated": {
+          "var": "${build.id}/sass/save.scss",
+          "src": "${build.id}/sass/save"
+        }
+      }
+    },
+    "phone": {
+      "toolkit": "modern",
+      "theme": "theme-material",
+      "sass": {
+        "generated": {
+          "var": "${build.id}/sass/save.scss",
+          "src": "${build.id}/sass/save"
+        }
+      }
+    }
+  },
+```
+
+Here is an example of the **build profiles** for universal application using both `modern` and `classic` toolkits:
+```json
+  "builds": {
+      "classic": {
+          "toolkit": "classic",
+          "theme": "theme-triton",
+          "sass": {
+              "generated": {
+                  "var": "classic/sass/save.scss",
+                  "src": "classic/sass/save"
+              }
+          }
+      },
+
+      "modern": {
+          "toolkit": "modern",
+          "theme": "theme-material",
+          "sass": {
+              "generated": {
+                  "var": "modern/sass/save.scss",
+                  "src": "modern/sass/save"
+              }
+          }
+      }
+  },
+```
+
+## Generating The Manifest
+As mentioned previously, `app.json` undergoes a transformation during the build process prior to being presented at runtime as `Ext.manifest`. This process consists of _merging object_ much like `Ext.merge` but with a twist: 
+  - when two arrays are "merged" they are **concatenated**.
+
+1. The first step in this transformation is to merge settings for the desired build **environment** (for example, `"production"` or `"testing"`). 
+
+2. Following this, if a **build profile** is being used, its contents are merged. 
+   
+3. If either the root or build profile specified a "toolkit" ("classic" or "modern"), that object's properties are merged. 
+   
+4. Finally, if a packager ("cordova" or "phonegap") is configured, its properties are merged.
+
+In pseudo-code this would be something like this:
+
+```js
+var manifest = load('app.json');
+
+// These would come from the `sencha app build` command:
+var environment = 'production';
+var buildProfile = 'native';
+
+mergeConcat(manifest, manifest[environment]);
+
+if (buildProfile) {
+    mergeConcat(manifest, manifest.builds[buildProfile]);
+}
+
+if (manifest.toolkit) {
+    mergeConcat(manifest, manifest[manifest.toolkit]);
+}    
+
+if (manifest.packager) {
+    mergeConcat(manifest, manifest[manifest.packager]);
+}
+```
+
+## Packages
+The final step in _producing the manifest_ is to add any **required packages**.
+
+When a required package specifies "js" or "css" entries in its `package.json`, these are concatenated in **package dependency order** to the front of the arrays already produced. This allows a package to handle such dependencies itself.
+
+In addition to "js" and "css" entries, the content of each required package's `package.json` file is **cleaned up slightly** and added to the `"packages"` object in the *final manifest* keyed by the *package name*. 
+- If `app.json` already contains a `packages` object, then that object will be **merged** with the content of the corresponding `package.json` file. 
+- Priority is given to `app.json` to allow its properties to pass through as configuration options to packages.
+
+In pseudo-code, the `app.json` and `package.json` contents are merged like so:
+```js
+var manifest;  // from above
+
+manifest.packages = manifest.packages || {};
+
+var js = [], css = [];
+
+// Expand required packages and sort in dependency order
+expandAndSort(manifest.requires).forEach(function (name) {
+    var pkg = load('packages/' + name + '/package.json');
+
+    js = js.concat(pkg.js);
+    css = css.concat(pkg.css);
+    manifest.packages[name] = merge(pkg, manifest.packages[name]);
+});
+
+manifest.css.splice(0, 0, css);
+
+var k = isExtJS ? 0 : manifest.js.indexOf('sencha-touch??.js');
+manifest.js.splice(k, 0, js);
+```
+This produces an `Ext.manifest` that might look like this:
+```json
+{
+    "name": "MyApp",
+    "packages": {
+        "ext": {
+            "type": "framework",
+            "version": "5.0.1.1255"
+        },
+        "ext-theme-neptune": {
+            "type": "theme",
+            "version": "5.0.1.1255"
+        },
+        ...
+    },
+    "theme": "ext-theme-neptune",
+    "js": [{
+        "path": "app.js"
+    }],
+    "css": [{
+        "path": "app.css"
+    }],
+}
+```
+The result of this merging means that package _foo_ can provide some **global options** in its `package.json` (for example, "bar") and set its default value. Any application that uses the _foo_ package can configure this option like so in `app.json`:
+```json
+"packages": {
+    "foo": {
+        "bar": 42
+    }
+}
+```
+The package retrieves this value like so:
+```js
+console.log('bar: ' + Ext.manifest.packages.foo.bar);
+```
+
+## Load Order
+One of the major differences between loading your application in **development** and from a **build** is the **order in which the individual files are presented to the browser**. In previous releases, your `app.js` file was very nearly the first file processed by the browser. As its requirements were stated, more files were loaded and their requirements discovered and so on.
+
+In a build, however, _this order is **reversed**_. Your `app.js` file will be almost always the **very last file** in the build output. This can easily lead to situations where _code works in development but fails in production_ - clearly an undesirable outcome.
+
+With Ext JS 5, the **load order** that will be used for the build is **added to the manifest** and used to load files in that same order. While this makes the manifest considerably larger, it is **ONLY used during development**.
+
+### Production Build: Loading of Files
+![](./modern-app/docs/production_load.png)
+
+### Development Watch: Loading of Files
+![](./modern-app/docs/development_load_01.png)
+![](./modern-app/docs/development_load_02.png)
+
+## Loading The Manifest
+The **Microloader** (in prod. embedded or microloader.js and in dev. bootstrap.js) will load your application as it is described in `app.json` and passed along in `Ext.manifest`. To do this, the **Microloader** must first **load the manifest**. There are _three_ basic ways to accomplish this.
+
+1. **Embedded Manifest**
+For typical applications there is a **single** _theme, locale_ and _framework_ selection and that results in a **single manifest**. This manifest (in prod. app.json and in dev. bootstrap.json) can be placed in the output markup file to optimize download time.
+
+To enable this option, add the following to `app.json`:
+```json
+"output": {
+    "manifest": {
+        "embed": true
+    }
+}
+```
+This setting will embed the manifest and the Microloader in the markup file.
+
+![](./modern-app/docs/manifest_embed_comparison.png)
+
+2. **Named Manifest**
+If you use _build profiles_, embedding the manifest is NOT an option. Instead the **Microloader** can _request the manifest_ at **load time given a name**. By default, the generated `app.json` file is placed in the same folder as the markup file and that is the default manifest name. To specify a different name, you can do this:
+```js
+<script type="text/javascript">
+    var Ext = Ext || {};
+    Ext.manifest = 'foo';  // loads "./foo.json" relative to your page
+</script>
+```
+This approach is a useful way to manage build profiles on the server side by _generating the name_ rather than hard-coding it.
+
+3. **Dynamic Manifest**
+There are times when you may want to **select a build profile client-side**. To simplify this, the Microloader defines a hook method called `Ext.beforeLoad`. If you define this method like the following, you can control _the name or content_ of `Ext.manifest` prior to the Microloader processing it while leveraging its platform detection.
+```js
+<script type="text/javascript">
+  var Ext = Ext || {};
+  Ext.beforeLoad = function (tags) {
+    var theme = location.href.match(/theme=([\w-]+)/,
+    locale = location.href.match(/locale=([\w-]+)/);
+
+    theme  = (theme && theme[1]) || 'crisp';
+    locale = (locale && locale[1]) || 'en';
+
+    Ext.manifest = theme + "-" + locale;
+  };
+</script>
+```
+The above is taken from the Ext JS 5 Kitchen Sink example. That example is built in several themes and 2 locales (English “en” and Hebrew “he”). By providing this method the build profile name is changed to a value like “crisp-en” which instructs the Microloader to load the `crisp-en.json` manifest as opposed to `app.json`.
+
+The **build profile selection process** can be **whatever is needed by your application**. 
+- A server-side framework might chose to make this selection as the page is rendered. 
+- This could be based on cookies, or other personal data. 
+- In the above case, it is based purely on the URL.
+
+### Platform Detection / Responsiveness
+
+Often the _**device or browser** is a key selection criteria_, so the **Microloader** _passes an **object**_ called `tags` to beforeLoad. This object contains as properties _the various platform tags it has detected_. The set of all tags are these:
+```
+phone
+tablet
+desktop
+touch
+ios
+android
+blackberry
+safari
+chrome
+ie10
+windows
+tizen
+firefox
+```
+The `beforeLoad` method can _use_ these tags or _even modify_ them. This object is subsequently used to control filtering of _assets_ (js or css items described in the manifest) as well as _run-time config values_ set by `platformConfig`. This hook then allows you to control what these filters will match. Modifying the tags is, however, primarily intended for adding new tags that have meaning to your application. **Custom tags** should be prefixed by `ux-`. Sencha provided tags will not begin with this prefix.
+
+### Tags specified by the `manifest`
+
+The manifest also provides a `tags` property for setting the available tags. This property may be either an **array of strings**
+```
+"tags": ["ios", "phone", "fashion"]
+```
+or as **an object literal**, keyed by tag name, where the value will be the value of that tag.
+
+"tags": {
+    "ios": true,
+    "phone": true,
+    "desktop": false,
+    "fashion": true
+}
+When supplied, this tags _will take priority_ over *autodetected* values. Since these values are supplied by the **manifest**, they **will NOT be available to the `beforeLoad` method**, and will overwrite any updates to the tags made by that method in the event of a tag name collision.
+
+## Summary of Inner Workings
+
+1. The generated `bootstrap.js` for **development build**, corresponds to the `microloader.js` of **production build** if `"embed": false` is set. Otherwise, it is embedded inside the `index.html` file.
+
+2. The generated `bootstrap.json` for **development build**, corresponds to the *more concise* `app.json` of **production build**:
+   - `bootstrap.json` has these extra properties:
+     - `paths`: Paths to `Ext` classes and to our application namespace.
+```json
+      "paths": {
+        "ClassicApp": "app",
+        "Ext": "../sdks/ext/classic/classic/src",
+        "Ext.AbstractManager": "../sdks/ext/packages/core/src/AbstractManager.js",
+        "Ext.Ajax": "../sdks/ext/packages/core/src/Ajax.js",
+        ....
+```
+     - `classes`: 
+```json
+      "classes": {
+        "ClassicApp.Application": {
+          "idx": 29,
+          "alias": [],
+          "alternates": []
+        },
+        "ClassicApp.model.Base": {
+          "idx": 30,
+          "alias": [],
+          "alternates": []
+        },
+        "ClassicApp.model.Personnel": {
+          "idx": 31,
+          "alias": [],
+          "alternates": []
+        },
+        "ClassicApp.view.main.MainController": {
+          "idx": 34,
+          "alias": ["controller.main"],
+          "alternates": []
+        },
+        ....
+```
+
+   - `js` property in `app.json` file in production has only one entry, which is the `app.js` while the `js` property in `bootstrap.json` has entries for **all the necessary JavaScript files** necessary to generate the final `app.js` of production build.
+
+3. In production build `app.js` contains all our JS and Ext JS sources as concatenated and minified.
+
+4. The `Application Cache API` is being removed from the web platform so, do not use `appCache`.
+
+5. Below is an example to having cache for each development build for `Ext.Loader`. You still get a `_dc` param but the number is **static** and won't change until **next time you build**. Which works nicely.
+```json
+   "development": {
+      "loader": {
+         "cache": "${build.timestamp}"
+      }
+   }
+```
+6. 
