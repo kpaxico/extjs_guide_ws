@@ -979,4 +979,102 @@ When supplied, this tags _will take priority_ over *autodetected* values. Since 
       }
    }
 ```
-6. 
+# Resource Management
+
+Web applications commonly include _images_ and _other non-code assets_ (such as video clips, data files, etc.) in addition to their JavaScript, HTML and CSS content. `Sencha Cmd` categorizes these additional assets as **resources** and provides several options for their management. The best way to understand these options is to start simple and grow the scenario one layer at a time.
+
+## Application Resources
+Let's begin by evaluating our classic toolkit application under the "myapp" folder. The standard structure for a single-toolkit application looks like this:
+```
+app/
+    view/
+    ...
+resources/   # home for application resources
+app.json
+```
+### app.json
+`app.json`, the application descriptor, contains many configuration options. However, the `resources` array describes the location of the **application's resources**:
+```json
+"resources" [{
+  // This is the name of the folder in our application folder that the resources will be copied from
+  // By default, resources are copied to a "resources" subfolder in this directory.
+  "path": "resources",
+  "output": "shared"
+  ...
+}]
+```
+In single-toolkit applications such as this one, only the first entry (shown above) corresponds to an actual resource folder. The remaining entries (and the "output" property of this first entry) are simply ignored in this case, but will come into play for universal applications (more below).
+
+The top-level `"output"` object in `app.json` completes the picture by specifying the output locations for the application's build. The starting point of this is the output base:
+```json
+"output": {
+    "base": "${workspace.build.dir}/${build.environment}/${app.name}",
+    ...
+},
+```
+The `output` `base` directory is the **root location** where all build products are placed. In the above, the output base is a formula that uses several configuration variables, which are expanded by Sencha Cmd when it **loads** the `app.json` file. In this case, the expansion would produce the following path:
+
+./workspace/build/production/MyApp
+
+By default, resources are copied to a `resources` subfolder in this directory. This arrangement means that _the relative paths in **development mode**_ will match _the relative paths in the **build folder**_.
+
+### Themes
+Many of the resources needed by an application are provided by its `theme`. You can specify a theme via `app.json` like so:
+```
+"theme": "theme-triton",
+```
+
+Themes _often extend_ other themes, which allows _resources_ to be **inherited and overridden** as needed. The **base theme** for _Triton_ is _Neptune_, so the _resources_ for both of these themes will be **inherited by the application** and _copied into the `resources` folder`_.
+
+To illustrate this process, let's consider the propagation of a particular image resource:
+```
+theme-neptune/
+    resources/
+        images/
+            loadmask/
+               loading.gif
+```
+Now, build your application like so:
+`sencha app build --production`
+
+The `"loading.gif"` is copied from Neptune's `resources` folder into the application's build output. The resulting output looks something like this:
+```
+build/
+    production/
+        ClassicApp/
+            index.html    # the output page
+            resources/
+                images/
+                    loadmask/
+                       loading.gif  # from theme-neptune
+```
+As you can see, the build output now contains an image resource that it inherited from its _base theme_.
+
+#### Resource Composition
+
+In the above example, the `images/loadmask/loading.gif` resource was inherited from its base theme, Triton. If the application were to create its own GIF file in its own `resources` folder **at the same relative path**, that GIF would **override the image from the theme**.
+
+> This is implemented in the `classic-app` of this workspace.
+
+To override a resource provided by the theme, place your replacement image in the resources folder corresponding to the theme's resources folder. In this case, we're overriding the theme's loadmask "loading.gif" file. So you'd put your image here:
+```
+app/
+    view/
+    ...
+resources/
+    images/
+        loadmask/
+           loading.gif   # override theme image
+app.json
+```
+
+Now, you can just build the **production version** of your application and you should see your application's "loading.gif" in the resulting build resource folder.
+
+Similarly, the Triton theme could have overridden the image from Neptune but this would have been transparent to the application. The application's only concern is that the configured theme uses this image; whether this image comes from the application itself or from the theme (or an inherited theme) is completely flexible.
+
+### Code Packages
+Similar to themes, **code packages** can also contain resources. These resources are also copied into the `resources` build output folder. **To protect multiple, independently developed packages from colliding**, however, these resources are placed in a folder named by the **package name**.
+
+For example, let's visit the "arrow-button" package we generated above. This package should contain an image in its resources, which will assist in illustrating the package's resource management.
+
+Note: You can use the following arrows for your convenience if you're following along with this guide:
