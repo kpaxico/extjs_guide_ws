@@ -45,6 +45,15 @@
         "${package.dir}/examples"
       ]
     },
+    "resource": {
+      "paths": ""
+    },
+    "resources": [
+      {
+        "path": "${package.dir}/resources",
+        "output": "shared"
+      }
+    ],
     "requires": [
       "ext",
       "core"

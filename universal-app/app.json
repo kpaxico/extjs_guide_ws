@@ -14,7 +14,10 @@
      *      ]
      */
     "requires": [
-        "font-awesome"
+        "font-awesome",
+
+        "lib-resource",
+        "lib-util"
     ],
 
     /**
@@ -296,7 +299,7 @@
         "output": {
             "base": "/Users/ipek/Sites/sencha/${app.name}",
             "appCache": {
-                "enable": true,
+                "enable": false,
                 "path": "cache.appcache"
             }
         },

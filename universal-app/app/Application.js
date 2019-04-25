@@ -6,6 +6,8 @@
 Ext.define('UniversalApp.Application', {
     extend: 'Ext.app.Application',
 
+    requires: ['Lib.util.State'],
+
     name: 'UniversalApp',
 
     quickTips: false,
