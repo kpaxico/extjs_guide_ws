@@ -17,7 +17,9 @@
         "font-awesome",
 
         "lib-resource",
-        "lib-util"
+        "lib-util",
+
+        "google"
     ],
 
     /**

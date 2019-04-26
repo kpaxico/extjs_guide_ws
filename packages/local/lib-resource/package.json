@@ -45,13 +45,18 @@
         "${package.dir}/examples"
       ]
     },
+    // Without this configuration the package resources in `resources` folder are copied to the `resources` folders of each build profile of the application.
     "resource": {
       "paths": ""
     },
+    // Setting the below configuration to make the resources of this package to be "sharable" is not enough.
+    // We also have to set the above property.
     "resources": [
       {
         "path": "${package.dir}/resources",
         "output": "shared"
+      }, {
+        "path": "${package.dir}/resources_default"
       }
     ],
     "requires": [

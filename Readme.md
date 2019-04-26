@@ -51,7 +51,7 @@ sencha generate app -ext --modern ModernApp modern-app
 sencha generate package lib-util
 ```
 
-With this command a local package named "lib-util" is created under the _packages\local\core_.
+With this command a local package named "lib-util" is created under the _packages/local/core_.
 
 ## Building the app
 
@@ -162,7 +162,7 @@ There are many ways to *configure build properties*. The simplest way is to edit
 - `".sencha/app/defaults.properties"`
   - => Users⁩/ipek⁩/bin⁩/Sencha⁩/Cmd⁩/6.7.0.63⁩/ant⁩/build⁩/app⁩/defaults.properties
 
-#### Changing the place of generated files for develeopment (move them under the folder named 'generatedFiles')
+#### Changing the place of generated files for development (move them under the folder named 'generatedFiles')
 
 - In app.json, make the following changes:
 
@@ -204,12 +204,19 @@ Do not make the same changes for the `"output"` entry which affects the **produc
 ## Building a package
 
 Go to the package directory and run:
-> `sencha package build`
+`sencha package build`
 
 1.) If a package is empty (does not have any toolkit, theme, or `ext` framework dependency) build will succeed.
 
+Open terminal and in the workspace folder run the following commands to create a package named `lib-empty`. After creating the package, change directory to newly created package directory and build it.
+
 ```bash
-kmac:utils ipek$ sencha package build
+$ sencha generate package lib-empty # This will create the package
+
+$ cd packages/local/lib-empty
+
+$ sencha package build
+
 Sencha Cmd v6.7.0.63
 [INF] Processing Build Descriptor : default
 [INF] Loading compiler context
@@ -226,9 +233,10 @@ Sencha Cmd v6.7.0.63
 [INF] Processing examples in "/Users/ipek/Documents/workspace/sencha/empty_ws/packages/local/utils/examples" (/Users/ipek/Documents/workspace/sencha/empty_ws/packages/local/utils/examples)
 ```
 
-1. If a package is not empty  but does not have any toolkit, theme dependency we have to make following changes:
-   1. Remove sass folder
-   2. Modify package.json:
+2.) If a package is not empty (it has an Ext JS framework dependant code), but does not have any toolkit or theme dependency, we have to make following changes to be able to build the package:
+
+   1. Remove `sass` folder
+   2. Make the following changes in the `package.json`:
       - Add "framework": "ext"
       - Set "slicer": null
       - Set "sass" : null
@@ -487,8 +495,8 @@ An array of **descriptions of JavaScript code files to load**. By default, an Ex
 
 ```json
 "js": [{
-    "path": "app.js",
-    "bundle": true
+  "path": "app.js",
+  "bundle": true
 }]
 ```
 
@@ -496,17 +504,17 @@ This entry specifies your application's **entry point**. The `bundle` flag indic
 
 ```json
 "js": [{
-    "path": "library1.js"
-    // "remote": false (defaults)
+  "path": "library1.js"
+  // "remote": false (defaults)
 },{
-    "path": "library2.js",
-    "remote": true
+  "path": "library2.js",
+  "remote": true
 },{
-    "path": "library3.js",
-    "includeInBundle": true
+  "path": "library3.js",
+  "includeInBundle": true
 },{
-    "path": "app.js",
-    "bundle": true
+  "path": "app.js",
+  "bundle": true
 }]
 
 ```
@@ -546,7 +554,7 @@ If not specified, this file will only be loaded once, and cached inside `localSt
 
 ```json
 "classpath": [
-    "app"
+  "app"
 ],
 ```
 
@@ -554,8 +562,8 @@ If not specified, this file will only be loaded once, and cached inside `localSt
 
 ```json
 "classpath": [
-    "app",
-    "${toolkit.name}/src" // To include /classic/src
+  "app",
+  "${toolkit.name}/src" // To include /classic/src
 ],
 ```
 
@@ -565,8 +573,8 @@ Your CSS assets are handled slightly different than JavaScript. This is because 
 
 ```json
 "css": [{
-    "path": "boostrap.css",
-    "bootstrap": true
+  "path": "boostrap.css",
+  "bootstrap": true
 }],
 ```
 
@@ -592,16 +600,16 @@ The "output" object gives you the ability to control where and how build outputs
 
 ```json
 "output": {
-    "page": {
-        "path": "../page.jsp",
-        "enable": false
-    },
-    appCache: {
-        "enable": false
-    },
-    "manifest": {
-        "name": "bootstrap.js"
-    }
+  "page": {
+    "path": "../page.jsp",
+    "enable": false
+  },
+  appCache: {
+    "enable": false
+  },
+  "manifest": {
+    "name": "bootstrap.js"
+  }
 }
 ```
 
@@ -615,10 +623,10 @@ The *Application cache* is **a manifest** used to determine **what assets the br
 
 ```json
 "output": {
-    "page": "index.html",
-    "appCache": {
-        "enable": true
-    }
+  "page": "index.html",
+  "appCache": {
+    "enable": true
+  }
 }
 ```
 
@@ -626,13 +634,13 @@ The `appCache` property seen here is used to determine if the build process will
 
 ```json
 "appCache": {
-    "cache": [
-        "index.html"
-    ],
-    "network": [
-        "*"
-    ],
-    "fallback": []
+  "cache": [
+    "index.html"
+  ],
+  "network": [
+    "*"
+  ],
+  "fallback": []
 }
 ```
 
@@ -649,18 +657,18 @@ This cache is enabled per asset via the `update` propety. This can be set to eit
 ```json
 // app.js will be delta patched on updates
 "js": [
-    {
-        "path": "app.js",
-        "bundle": true,
-        "update": "delta"
-    }
+  {
+    "path": "app.js",
+    "bundle": true,
+    "update": "delta"
+  }
 ],
 // app.css will be fully downloaded on updates
 "css": [
-    {
-        "path": "app.css",
-        "update": "full"
-    }
+  {
+    "path": "app.css",
+    "update": "full"
+  }
 ]
 ```
 
@@ -670,7 +678,7 @@ Once *Local Storage Caching* has been **enabled on an asset** one must **_global
 
 ```json
 "cache": {
-    "enable": false
+  "enable": false
 }
 ```
 
@@ -678,8 +686,8 @@ One can also configure the path and generation of **deltas**. When the deltas pr
 
 ```json
 "cache": {
-    "enable": true,
-    "deltas": true
+  "enable": true,
+  "deltas": true
 }
 ```
 
@@ -689,16 +697,16 @@ One can also configure the path and generation of **deltas**. When the deltas pr
 
 ```js
 Ext.application({
-    name: 'MyApp',
-    mainView: 'MyMainView',
-    onAppUpdate: function () {
-      Ext.Msg.confirm('Application Update', 'This application has an update, reload?',
-          function (choice) {
-              if (choice === 'yes') {
-                  window.location.reload();
-              }
-          }
-    );
+  name: 'MyApp',
+  mainView: 'MyMainView',
+  onAppUpdate: function () {
+    Ext.Msg.confirm('Application Update', 'This application has an update, reload?',
+      function (choice) {
+        if (choice === 'yes') {
+            window.location.reload();
+        }
+      }
+  );
 }
 ```
 
@@ -708,21 +716,21 @@ When an application has *multiple variations*, we can add a `“builds”` objec
 
 ```json
 "builds": {
-    "classic": {
-        "theme": "ext-theme-classic"
-    },
-    "gray": {
-        "theme": "ext-theme-gray"
-    },
-    "access": {
-        "theme": "ext-theme-access"
-    },
-    "crisp": {
-        "theme": "ext-theme-crisp"
-    },
-    "neptune": {
-        "theme": "ext-theme-neptune"
-    }
+  "classic": {
+    "theme": "ext-theme-classic"
+  },
+  "gray": {
+    "theme": "ext-theme-gray"
+  },
+  "access": {
+    "theme": "ext-theme-access"
+  },
+  "crisp": {
+    "theme": "ext-theme-crisp"
+  },
+  "neptune": {
+    "theme": "ext-theme-neptune"
+  }
 }
 ```
 
@@ -732,8 +740,8 @@ There are **two optional properties** that are common variations for application
 
 ```json
 "locales": [
-    "en",
-    "he"
+  "en",
+  "he"
 ],
 ```
 
@@ -742,56 +750,56 @@ When `“locales”` or `“themes”` are given, **each of the values are combi
 Here is an example of the **build profiles** for a universal application using just `modern` toolkit:
 
 ```json
-  "builds": {
-    "desktop": {
-      "toolkit": "modern",
-      "theme": "theme-material",
-      "sass": {
-        "generated": {
-          "var": "${build.id}/sass/save.scss",
-          "src": "${build.id}/sass/save"
-        }
-      }
-    },
-    "phone": {
-      "toolkit": "modern",
-      "theme": "theme-material",
-      "sass": {
-        "generated": {
-          "var": "${build.id}/sass/save.scss",
-          "src": "${build.id}/sass/save"
-        }
+"builds": {
+  "desktop": {
+    "toolkit": "modern",
+    "theme": "theme-material",
+    "sass": {
+      "generated": {
+        "var": "${build.id}/sass/save.scss",
+        "src": "${build.id}/sass/save"
       }
     }
   },
+  "phone": {
+    "toolkit": "modern",
+    "theme": "theme-material",
+    "sass": {
+      "generated": {
+        "var": "${build.id}/sass/save.scss",
+        "src": "${build.id}/sass/save"
+      }
+    }
+  }
+},
 ```
 
 Here is an example of the **build profiles** for universal application using both `modern` and `classic` toolkits:
 
 ```json
-  "builds": {
-      "classic": {
-          "toolkit": "classic",
-          "theme": "theme-triton",
-          "sass": {
-              "generated": {
-                  "var": "classic/sass/save.scss",
-                  "src": "classic/sass/save"
-              }
-          }
-      },
-
-      "modern": {
-          "toolkit": "modern",
-          "theme": "theme-material",
-          "sass": {
-              "generated": {
-                  "var": "modern/sass/save.scss",
-                  "src": "modern/sass/save"
-              }
-          }
+"builds": {
+  "classic": {
+    "toolkit": "classic",
+    "theme": "theme-triton",
+    "sass": {
+      "generated": {
+        "var": "classic/sass/save.scss",
+        "src": "classic/sass/save"
       }
+    }
   },
+
+  "modern": {
+    "toolkit": "modern",
+    "theme": "theme-material",
+    "sass": {
+      "generated": {
+        "var": "modern/sass/save.scss",
+        "src": "modern/sass/save"
+      }
+    }
+  }
+},
 ```
 
 ### Generating The Manifest
@@ -871,25 +879,25 @@ This produces an `Ext.manifest` that might look like this:
 
 ```json
 {
-    "name": "MyApp",
-    "packages": {
-        "ext": {
-            "type": "framework",
-            "version": "5.0.1.1255"
-        },
-        "ext-theme-neptune": {
-            "type": "theme",
-            "version": "5.0.1.1255"
-        },
-        ...
+  "name": "MyApp",
+  "packages": {
+    "ext": {
+      "type": "framework",
+      "version": "5.0.1.1255"
     },
-    "theme": "ext-theme-neptune",
-    "js": [{
-        "path": "app.js"
-    }],
-    "css": [{
-        "path": "app.css"
-    }],
+    "ext-theme-neptune": {
+      "type": "theme",
+      "version": "5.0.1.1255"
+    },
+    ...
+  },
+  "theme": "ext-theme-neptune",
+  "js": [{
+      "path": "app.js"
+  }],
+  "css": [{
+      "path": "app.css"
+  }],
 }
 ```
 
@@ -897,9 +905,9 @@ The result of this merging means that package _foo_ can provide some **global op
 
 ```json
 "packages": {
-    "foo": {
-        "bar": 42
-    }
+  "foo": {
+    "bar": 42
+  }
 }
 ```
 
@@ -909,7 +917,8 @@ The package retrieves this value like so:
 console.log('bar: ' + Ext.manifest.packages.foo.bar);
 ```
 
-**Note:** Even though a package is required in the `requires` property of `app.json`, if it is NOT required (used) in the application, its source is not appended to the production build output `app.js`.
+**My Note:**
+Even though a package is required in the `requires` property of `app.json`, if it is NOT required (used) in the application, its source is not appended to the production build output `app.js`.
 
 ### Load Order
 
@@ -1236,20 +1245,20 @@ Like it does with themes, the application **can override package resources** as 
 As with themes, the application can override these resources as well:
 
 ```bash
-  app/
-      view/
-      ...
-  resources/
-      arrow-button/
-          images/
-              arrow_green.png
-              arrow_red.png
-          images/
-              lib-resource/   # the package's resource "sandbox"
-                  images/
-                      bg_img.jpg    # override package's image
-  sass/
-  app.json
+app/
+    view/
+    ...
+resources/
+    arrow-button/
+        images/
+            arrow_green.png
+            arrow_red.png
+        images/
+            lib-resource/   # the package's resource "sandbox"
+                images/
+                    bg_img.jpg    # override package's image
+sass/
+app.json
 ```
 
 ![Overriding a package resource with an application resource](./classic-app/docs/app_res_override_pkg_res.png)
@@ -1288,7 +1297,7 @@ _Unlike_ application builds, package builds **do NOT have the concept of an _env
 
 ![Build package content structure](./classic-app/docs/lib-resource-pkg-after-build.png)
 
-The contents of the "build" folder are then directly usable as script and link elements in applications that do not use Sencha Cmd.
+The contents of the "build" folder are then directly usable as _script_ and _link_ elements in applications that do not use Sencha Cmd.
 
 #### Resource Paths
 
@@ -1339,27 +1348,27 @@ This isolation is necessary for some resources, but there are also resources tha
 
 ```json
 "builds": {
-    "classic": {  // This can be any name
-        "toolkit": "classic",
-        "theme": "theme-triton",
-        "sass": {
-            "generated": {
-                "var": "classic/sass/save.scss",
-                "src": "classic/sass/save"
-            }
-        }
-    },
-
-    "modern": {  // This can be any name
-        "toolkit": "modern",
-        "theme": "theme-material",
-        "sass": {
-            "generated": {
-                "var": "modern/sass/save.scss",
-                "src": "modern/sass/save"
-            }
-        }
+  "classic": {  // This can be any name
+    "toolkit": "classic",
+    "theme": "theme-triton",
+    "sass": {
+      "generated": {
+          "var": "classic/sass/save.scss",
+          "src": "classic/sass/save"
+      }
     }
+  },
+
+  "modern": {  // This can be any name
+    "toolkit": "modern",
+    "theme": "theme-material",
+    "sass": {
+      "generated": {
+          "var": "modern/sass/save.scss",
+          "src": "modern/sass/save"
+      }
+    }
+  }
 },
 ```
 
@@ -1368,91 +1377,90 @@ This isolation is necessary for some resources, but there are also resources tha
 The `app.json` file's `"output"` object can be adjusted to handle both of these scenarios. This is done by default for a universal Sencha Cmd starter application:
 
 ```json
-  "output": {
-      "base": "${workspace.build.dir}/${build.environment}/${app.name}",
-      ....
-      "resources": {
-          "path": "${build.id}/resources",  // "default" resource pool
-          "shared": "resources"             // "shared" resource pool
-      }
-  },
+"output": {
+    "base": "${workspace.build.dir}/${build.environment}/${app.name}",
+    ....
+    "resources": {
+        "path": "${build.id}/resources",  // "default" resource pool
+        "shared": "resources"             // "shared" resource pool
+    }
+},
 ```
 
 The `"resources"` object properties (`"path"` and `"shared"`) are called **resource pools**.
 
 - Prior to Sencha Cmd 6.0.1, there was _only one_ resource output location: `output\resources\path`.
-- In Sencha Cmd 6.0.1, `output\resources\path` is now the **_default_ resource pool**.
-- There is also a new `"shared"` resource pool as well, but there can be any number of additional output locations added to the object.
+- In Sencha Cmd 6.0.1, `output\resources\path` is now the _**default** resource pool_.
+- There is also a new _**shared** resource pool_ as well, but there can be any number of additional output locations added to the object.
 
 In the above configuration, resources will be placed in the _same subdirectory_ as the CSS file. This is based on the `${build.id}` property expansion to be the name of the **build profile** ("classic" or "modern").
-> It is important to note that all relative paths in the "output" object are relative to the `"output\base"` property.
+
+- It is important to note that all relative paths in the "output" object are relative to the `"output\base"` property.
 
 After we build the `universal-app` for production (`sencha app build --production`), we get the following folder structure in the output build folder:
 
-![Production build output folder structure](./universal-app/docs/production_build_folder_01.png)
+![Production build output folder structure](./universal-app/docs/prod_build_collapsed.png)
 
-![Production build output folder structure (Expanded)](./universal-app/docs/production_build_folder_02.png)
+![Production build output folder structure (Expanded)](./universal-app/docs/prod_build_expanded.png)
 
 ##### `resources`property
 
 Corresponding to the **resource pools** above folder structure, is the optional `"output"` property on each entry in the top-level `"resources"` array.
 
 ```json
-  /**
-    * Extra resources to be copied into the resource folder as specified in the "resources"
-    * property of the "output" object. Folders specified in this list will be deeply copied.
-    */
-  "resources": [
-    {
-        "path": "resources",
-        "output": "shared"    // targets the "shared" resource pool
-    },
-    {
-        "path": "${toolkit.name}/resources" // uses the "default" pool
-    },
-    {
-        "path": "${build.id}/resources"
-    }
-  ],
+/**
+  * Extra resources to be copied into the resource folder as specified in the "resources"
+  * property of the "output" object. Folders specified in this list will be deeply copied.
+  */
+"resources": [
+  {
+      "path": "resources",
+      "output": "shared"                  // targets the "shared" resource pool
+  },
+  {
+      "path": "${toolkit.name}/resources" // targets the "default" pool
+  },
+  {
+      "path": "${build.id}/resources"     // targets the "default" pool
+  }
+],
 ```
 
-Given these resource locations, a universal application can still _override_ the "loading.gif"; but to do so, it would move the image into the `"classic/resources"` folder.
+Given these resource locations, a universal application can still _override_ the "loading.gif"; but to do so, it hast to move the image into the `"classic/resources"` folder.
 
 ```bash
-  app/
-      view/
-      ...
-  resources/
-      ...
-  classic/                     # from the ${toolkit.name} in the resources array
-      resources/
-          images/
-              loadmask/
-                loading.gif   # override theme image
-  modern/
-      resources/
-  app.json
+app/
+    view/
+    ...
+resources/
+    ...
+classic/                     # from the ${toolkit.name} in the resources array
+    resources/
+        images/
+            loadmask/
+              loading.gif   # override theme image
+modern/
+    resources/
+app.json
 ```
 
 #### Shared Resources
 
-When a resource can be shared, it should be put in the **top-level** "resources" folder as opposed to "classic/resources" or "modern/resources". For example:
-
-Below, video.mp4 stays in the **top-level** resources folder which is associated with the "shared" resource pool, which is directed to the "resources" folder at the root of the build output directory:
+When a resource can be shared, it should be put in the **top-level `resources`** folder as opposed to "classic/resources" or "modern/resources". For example below, video.mp4 stays in the **top-level `resources`** folder which is associated with the _**shared** resource pool_, which is directed to the `resources` folder at the root of the build output directory:
 
 The structure of application folder:
 
 ```bash
-  app/
-      view/
-      ...
-  resources/      # shared resources folder
-      video.mp4
-  classic/
-      resources/
-  modern/
-      resources/
-  app.json
+app/
+    view/
+    ...
+resources/      # shared resources folder
+    video.mp4
+classic/
+    resources/
+modern/
+    resources/
+app.json
 ```
 
 The structure of the build output folder:
@@ -1493,23 +1501,23 @@ As we see, the contents from `classic/resources` folder are deeply copied to the
 
 For this example we will use the _lib-resource_ package that we have used before in the previous demonstrations. It has three images under `resources/images`folder:
 
-![(Package resources](./universal-app/docs/package_resources.png)
+![(Package resources](./universal-app/docs/pkg_res.png)
 
 1. Add _lib-resource_ package to the `requires` array of universal-app and run `sencha app build` to build the application for production.
 
 2. If we look at the build output we will see that, `lib-resource` folder is copied to both under `UniversalApp/classic/resources/` and `UniversalApp/modern/resources/` including three images.
 
-![(Package resources](./universal-app/docs/package_resources_in_built_app.png)
+![(Package resources](./universal-app/docs/prod_build_default_pkg_res.png)
 
 #### Shared Package Resources
 
 Packages, like applications, can describe resources that target specific **resource pools** by specifying a resource pool name using the `"output"` property on a resource entry. For example, the `"font-awesome"` package contains almost 800 KB of font assets which need not be duplicated for each build profile. To support this optimization, the "package.json" file for "font-awesome" looks contains this:
 
 ```json
-  "resources": [{
-    "path": "${package.dir}/resources",
-    "output": "shared"
-  }]
+"resources": [{
+  "path": "${package.dir}/resources",
+  "output": "shared"
+}]
 ```
 
 For applications that do NOT define **resource pools**, these resources will be placed in the _default_ resource pool. While this may be inefficient in some cases, this ensures that the assets will be mutually available. It is therefore _always recommended_ to declare a **"shared" resource pool** in applications that use build profiles.
@@ -1527,17 +1535,43 @@ For this example we will again use the _lib-resource_ package. This time we will
 ]
 ```
 
-**Note:** The docs is just mentioning about the above configuration to make the package resources "sharable" in the application (making them to be copied to the top-level `resources` instead of the `resources` folders of each build profile). However this configuration did not accomplish this. When I checked the `package.json` file of "font-awesome" package, which was mentioned as the package sharing resources, I found the following entry that could was related with resources:
+**My Note:**
+The docs is just mentioning about the above configuration to make the package resources "sharable" in the application (making them to be copied to the top-level `resources` instead of the `resources` folders of each build profile). However this configuration did not accomplish this. When I checked the `package.json` file of "font-awesome" package, which was mentioned as the package sharing resources, I found the following entry that could was related with resources:
 
 ```json
-    "resource": {
-      "paths": ""
-    },
+"resource": {
+  "paths": ""
+},
 ```
 
 When I applied this to _lib_resource_ package, cleaned up the application build output folder, re-run the application build, it worked! The package resources in `resources` folder are only copied to the shared `resources` (top-level `resources` folder) of the application.
 
-![(Package resources](./universal-app/docs/production_build_folder_03.png)
+![(Application build output while using shared package resources](./universal-app/docs/prod_build_shared_pkg_res.png)
+
+##### A Universal Application example with package resources that are outputted to different folders
+
+In the previous two examples, with application build, the package resources in the `resources` folder of the package were outputted to  `resources` folder of each build profile by using _**default** resource pool_. And then we changed the configuration in `package.json` to output them to the shared (**top-level**) `resources` folder using _**shared** resource pool_. What if we had two different groups of resources in our package that needed to use both of these _resource pools_ at the same time?
+
+In order to implement this, we will add another folder to our `lib-resource`, named `resources_default`, which will use the _**default** resource pool_. And then, we will add `charts.png`image to this folder.
+
+![Package resources](./packages/local/lib-resource/docs/pkg_res.png)
+
+Lastly, we add the `"path": "${package.dir}/resources_default"` property to the `"resources"`property in `package.json` as following. Note that, since we did not specify the `"output"`property it will use the _**default** resource pool_.
+
+```json
+"resources": [
+  {
+    "path": "${package.dir}/resources",
+    "output": "shared"
+  }, {
+    "path": "${package.dir}/resources_default"
+  }
+],
+```
+
+Now, when we build the application, we will see the desired location of package resources in the build output folder as shown in the image:
+
+![Application build output with package resources using both default and shared pools](./universal-app/docs/prod_build_deafult_shared_pkg_res.png)
 
 #### Locating Shared Resources
 
@@ -1565,3 +1599,42 @@ items: [{
 #### Packages and Build Profiles
 
 Package builds also provide support for **build profiles**. These are very similar to applications _but_ package build profiles _are used to create package build artifacts for use **by non-Cmd applications**_. Packages, therefore, use build profiles to create multiple flavors of builds perhaps by toolkit or by theme depending on how these variables affect the usability of their code or styling.
+
+Ext JS SDK has the `google` package inside `packages/google` folder which has **multiple build profiles** for different themes with different toolkits:
+
+```json
+"resource": {
+  "paths": [
+    "${package.dir}/resources",
+    "${package.dir}/${toolkit.name}/resources"
+  ]
+},
+"builds": {
+  "triton": {
+    "toolkit": "classic",
+    "theme": "theme-triton"
+  },
+  "neptune": {
+    "toolkit": "classic",
+    "theme": "theme-neptune"
+  },
+  "crisp": {
+    "toolkit": "classic",
+    "theme": "theme-crisp"
+  },
+  "classic": {
+    "toolkit": "classic",
+    "theme": "theme-classic"
+  },
+  "modern-triton": {
+    "toolkit": "modern",
+    "theme": "theme-triton"
+  },
+  "modern-neptune": {
+    "toolkit": "modern",
+    "theme": "theme-neptune"
+  }
+}
+```
+
+![Application build output while using Google package](./universal-app/docs/prod_build_default_google_pkg_res.png)

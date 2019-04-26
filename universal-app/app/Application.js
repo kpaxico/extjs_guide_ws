@@ -6,7 +6,7 @@
 Ext.define('UniversalApp.Application', {
     extend: 'Ext.app.Application',
 
-    requires: ['Lib.util.State'],
+    requires: ['Lib.util.State', 'Ext.google.*'],
 
     name: 'UniversalApp',
 

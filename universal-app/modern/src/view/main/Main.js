@@ -9,7 +9,8 @@ Ext.define('UniversalApp.view.main.Main', {
 
     requires: [
         'Ext.MessageBox',
-        'Ext.layout.Fit'
+        'Ext.layout.Fit',
+        'Ext.ux.google.Map'
     ],
 
     controller: 'main',
