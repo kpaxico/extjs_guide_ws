@@ -2,3 +2,4 @@ build/
 generatedFiles/
 sdks/
 resources/sass/.sass-cache/
+*.log
