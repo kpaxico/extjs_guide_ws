@@ -61,65 +61,6 @@ sencha app watch
 
 `sencha app watch` will only watch **one build profile** at a time so you cannot switch between classic and modern only in the browser.
 
-In order to watch two profiles at the same time, we can watch them on different ports as following:
-
-```bash
-sencha app watch -port 1841 desktop
-sencha app watch -port 1842 phone
-```
-
-But in order for the above to work we have the make the following changes:
-
-1.) Instead of using the microloader file for each build profile (`bootstrap.js`), change `microloader` and `css` properties of `bootstrap` config in `app.json`, to generate microloader file depending on the build config:
-
-```json
-"bootstrap": {
-  "base": "${app.dir}",
-  "manifest": "generatedFiles/${build.id}.json",
-  "microloader": "generatedFiles/${build.id}.js",
-  "css": "generatedFiles/${build.id}.css"
-},
-```
-
-2.) Edit `index.html` to load the correct microloader depending on the **port number***. To do that, we can comment out the microloader script tag and add it manually by checking the port number. However, it is important we need to remove comments for **production build**!. As it is indicated by the comment above the script tag, this line must be kept intact for Sencha Cmd to build our application.
-
-```html
-	<title>Mouniapp</title>
-
-  <script type="text/javascript">
-    var Ext = Ext || {};
-
-    (function() {
-      var head= document.getElementsByTagName('head')[0]
-      var script = document.createElement('script')
-      script.id = 'microloader'
-      script.type= 'text/javascript'
-      script.setAttribute('data-app', '776f2446-636d-4da2-9ead-efb704748f0a')
-
-      var watchPort = location.port
-      if (watchPort == 1841) {
-        script.src = 'generatedFiles/desktop.js'
-        head.appendChild(script)
-      } else if (watchPort == 1842) {
-        script.src = 'generatedFiles/phone.js'
-        head.appendChild(script)
-      }
-    }());
-
-    Ext.beforeLoad = function (tags) {
-      var s = location.search;
-      var profile;
-      if (s.match(/\bdesktop\b/)) { profile = 'desktop' }
-      else if (s.match(/\bphone\b/)) { profile = 'phone' }
-      else { profile = tags.desktop ? 'desktop' : 'phone' }
-      Ext.manifest ='generatedFiles/' + profile;
-    };
-  </script>
-
-  <!-- The line below must be kept intact for Sencha Cmd to build your application -->
-  <!-- <script id="microloader" data-app="776f2446-636d-4da2-9ead-efb704748f0a" type="text/javascript" src="generatedFiles/bootstrap.js"></script> -->
-```
-
 ## Building the app
 
 Internally, the `sencha app build` command does basic validation and calls in to the Apache Ant build script found in `"build.xml"` at the root of the application. Specifically, it calls the `"build" target` of this script. This means the entire build process can be examined, extended and (if necessary) even modified.
