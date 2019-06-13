@@ -2,25 +2,35 @@
 
 ## Creating an empty workspace, apps and packages
 
-1.) Check the sdk by listing the paths:
+Assuming you have already downloaded and installed Sencha Cmd, as the next step, download the latest Ext JS SDK.
+
+1.) Extract Ext JS in a fixed location. I chose the path as /Users/myname/Documents/workspace/sencha/sdks/ext on my Mac.
+
+2.) Configure Sencha Cmd to always use the frameworks in "~/sencha-sdks" by running this command:
+
+```bash
+sencha config --prop sencha.sdk.path=/Users/myname/Documents/workspace/sencha/sdks --save
+```
+
+3.) Check the sdk path by listing the paths:
 
 ```bash
 sencha config --prop sencha.sdk.path --list
 ```
 
-2.) Create a workspace in a folder named `empty_ws`:
+4.) Create a workspace in a folder named `empty_ws`:
 
 ```bash
 sencha generate workspace empty_ws
 ```
 
-3.) Within the root folder of your workspace, execute the following to add the new framework. This creates a folder named `ext` under the `skds` folder in the workspace with a key name `ext`.
+5.) Within the root folder of your workspace, execute the following to add the new framework to the workspace. This creates a folder named `ext` under the `sdks` folder in the workspace with a key name `ext`.
 
 ```bash
-sencha framework add -key ext -source /Users/ipek/Documents/workspace/sencha/sdks/ext -path sdks/ext
+sencha framework add -key ext -source /Users/myname/Documents/workspace/sencha/sdks/ext -path sdks/ext
 ```
 
-4.) Once you have a Workspace, generating apps can be done as before, but using the `"ext" folder` in the workspace:
+6.) Once you have a Workspace, generating apps can be done as before, but using the `ext` folder in the workspace:
 
 ```bash
 sencha -sdk ./sdks/ext generate app UniversalApp universal-app
@@ -45,13 +55,13 @@ sencha generate app -ext --classic ClassicApp classic-app
 sencha generate app -ext --modern ModernApp modern-app
 ```
 
-5.) Add a new package named "lib-util" to the workspace:
+7.) Add a new package named "lib-util" to the workspace:
 
 ```bash
 sencha generate package lib-util
 ```
 
-With this command a local package named "lib-util" is created under the _packages/local/core_.
+With this command a local package named "lib-util" is created under the _packages/local/lib-util_.
 
 ## Watching the app
 
@@ -77,24 +87,17 @@ To see the current set of configuration properties, run this command:
 ```bash
 sencha diag show
 
-[INF]                     buildenvironment.dir : /Users/ipek/Documents/workspace/sencha/empty_ws
-[INF]                buildenvironment.load.dir : /Users/ipek/Documents/workspace/sencha/empty_ws
-[INF]                           cmd.config.dir : /Users/ipek/bin/Sencha/Cmd/6.7.0.63
-[INF]                                  cmd.dir : /Users/ipek/bin/Sencha/Cmd/6.7.0.63
-[INF]               cmd.merge.tool.args.araxis : -wait -merge -3 -a1 {base} {user} {generated} {out}
-[INF]               cmd.merge.tool.args.kdiff3 : {base} {user} {generated} -o {out}
-[INF]              cmd.merge.tool.args.p4merge : {base} {user} {generated} {out}
-[INF]            cmd.merge.tool.args.smartsync : {user} {generated} {base}
-[INF]           cmd.merge.tool.args.sourcegear : --merge --result={out} {user} {base} {generated}  
-[INF]             cmd.merge.tool.args.tortoise : -base:{base} -theirs:{generated} -mine:{user} -merged:{out}
-[INF]                               cmd.minver : 3.0.0.0
-[INF]                             cmd.platform : osx
-[INF]                      cmd.unicode.escapes : /Users/ipek/bin/Sencha/Cmd/6.7.0.63/unicode-escapes.json
+[INF]                     buildenvironment.dir : /Users/myname/Documents/workspace/sencha/empty_ws
+[INF]                buildenvironment.load.dir : /Users/myname/Documents/workspace/sencha/empty_ws
+[INF]                           cmd.config.dir : /Users/myname/bin/Sencha/Cmd/6.7.0.63
+[INF]                                  cmd.dir : /Users/myname/bin/Sencha/Cmd/6.7.0.63
+.....
+[INF]                      cmd.unicode.escapes : /Users/myname/bin/Sencha/Cmd/6.7.0.63/unicode-escapes.json
 [INF]                              cmd.version : 6.7.0.63
 [INF]                             cmd.web.port : 1841
 [INF]                        inspector.address : http://localhost:1839/
-[INF]                           repo.local.dir : /Users/ipek/bin/Sencha/Cmd/repo
-[INF]                          sencha.sdk.path : /Users/ipek/Documents/workspace/sencha/sdks
+[INF]                           repo.local.dir : /Users/myname/bin/Sencha/Cmd/repo
+[INF]                          sencha.sdk.path : /Users/myname/Documents/workspace/sencha/sdks
 [INF]                        shared.sencha.dir : true
 [INF]         system.java.net.useSystemProxies : true
 [INF]                           workspace.apps : universal-app,classic-app,modern-app
@@ -102,14 +105,21 @@ sencha diag show
 [INF]                         workspace.apps.1 : classic-app
 [INF]                         workspace.apps.2 : modern-app
 [INF]                    workspace.apps.length : 3
-[INF]                      workspace.build.dir : /Users/ipek/Documents/workspace/sencha/empty_ws/build
-[INF]                     workspace.config.dir : /Users/ipek/bin/Sencha/Cmd/6.7.0.63/ant/build/workspace
-[INF]                            workspace.dir : /Users/ipek/Documents/workspace/sencha/empty_ws
-[INF]            workspace.frameworks.ext.path : /Users/ipek/Documents/workspace/sencha/empty_ws/sdks/ext
+[INF]                      workspace.build.dir : /Users/myname/Documents/workspace/sencha/empty_ws/build
+[INF]                     workspace.config.dir : /Users/myname/bin/Sencha/Cmd/6.7.0.63/ant/build/workspace
+[INF]                            workspace.dir : /Users/myname/Documents/workspace/sencha/empty_ws
+[INF]            workspace.frameworks.ext.path : /Users/myname/Documents/workspace/sencha/empty_ws/sdks/ext
 [INF]         workspace.frameworks.ext.version : 6.7.0.161
-[INF]                   workspace.packages.dir : /Users/ipek/Documents/workspace/sencha/empty_ws/packages/local,/Users/ipek/Documents/workspace/sencha/empty_ws/packages
-[INF]               workspace.packages.extract : /Users/ipek/Documents/workspace/sencha/empty_ws/packages/remote
+[INF]                   workspace.packages.dir : /Users/myname/Documents/workspace/sencha/empty_ws/packages/local,/Users/myname/Documents/workspace/sencha/empty_ws/packages
+[INF]               workspace.packages.extract : /Users/myname/Documents/workspace/sencha/empty_ws/packages/remote
 ```
+
+In most cases you can tell where each property comes from by its prefix:
+
+`app.` -- See `app.json` and `.sencha/app/sencha.cfg`.
+`workspace.` -- See `workspace.json` and `.sencha/workspace/sencha.cfg`
+`framework.` -- See `cmd/sencha.cfg` in the Ext JS or Sencha Touch SDK.
+`cmd.` -- See `sencha.cfg` in the Sencha Cmd install folder.
 
 ### Build Properties
 
@@ -125,26 +135,26 @@ sencha ant .props
 [INF] [echoproperties] #Ant properties
 [INF] [echoproperties] #Tue Apr 16 10:16:46 EEST 2019  
 .......
-[INF] [echoproperties] app.dir=/Users/ipek/Documents/workspace/sencha/empty_ws/modern-app
+[INF] [echoproperties] app.dir=/Users/myname/Documents/workspace/sencha/empty_ws/modern-app
 [INF] [echoproperties] app.environment=production
 .......
 [INF] [echoproperties] app.loader.cache=false
 [INF] [echoproperties] app.loader.cacheParam=_dc
 [INF] [echoproperties] app.manifest.bootstrap=bootstrap.json
 [INF] [echoproperties] app.manifest.name=app.json
-[INF] [echoproperties] app.microloader=/Users/ipek/bin/Sencha/Cmd/6.7.0.63/ant/build/app/Microloader.js
-[INF] [echoproperties] app.microloader.bootstrap=/Users/ipek/bin/Sencha/Cmd/6.7.0.63/ant/build/app/Microloader.js
+[INF] [echoproperties] app.microloader=/Users/myname/bin/Sencha/Cmd/6.7.0.63/ant/build/app/Microloader.js
+[INF] [echoproperties] app.microloader.bootstrap=/Users/myname/bin/Sencha/Cmd/6.7.0.63/ant/build/app/Microloader.js
 [INF] [echoproperties] app.microloader.development=development.js
-[INF] [echoproperties] app.microloader.dir=/Users/ipek/bin/Sencha/Cmd/6.7.0.63/ant/build/app
+[INF] [echoproperties] app.microloader.dir=/Users/myname/bin/Sencha/Cmd/6.7.0.63/ant/build/app
 [INF] [echoproperties] app.microloader.name=Microloader.js
-[INF] [echoproperties] app.microloader.path=/Users/ipek/bin/Sencha/Cmd/6.7.0.63/ant/build/app/Microloader.js
+[INF] [echoproperties] app.microloader.path=/Users/myname/bin/Sencha/Cmd/6.7.0.63/ant/build/app/Microloader.js
 .......
 [INF] [echoproperties] app.production.cache.enable=true
 [INF] [echoproperties] app.production.compressor.type=yui
 [INF] [echoproperties] app.production.loader.cache=$'{'build.timestamp'}'
 [INF] [echoproperties] app.production.output.appCache.enable=true
 [INF] [echoproperties] app.production.output.appCache.path=cache.appcache
-[INF] [echoproperties] app.resources.dir=/Users/ipek/Documents/workspace/sencha/empty_ws/modern-app/resources
+[INF] [echoproperties] app.resources.dir=/Users/myname/Documents/workspace/sencha/empty_ws/modern-app/resources
 .......
 [INF] [echoproperties] app.toolkit=modern
 [INF] [echoproperties] app.version=1.0.0.0
@@ -155,20 +165,25 @@ sencha ant .props
 
 There are many ways to *configure build properties*. The simplest way is to edit one of the build properties files. To decide which file to edit it is helpful to know the priority of each of these files and under what conditions they are loaded.
 
-- `"local.properties"` -- If present, this file is loaded first. This file is intended to be applied only locally (to the local machine). It should not be committed to source control to be used by others. These settings take priority over any properties defined in other properties files as well as the current configuration properties.
+- `local.properties` -- If present, this file is loaded first. This file is intended to be applied only locally (to the local machine). It should not be committed to source control to be used by others. These settings take priority over any properties defined in other properties files as well as the current configuration properties.
 
 - Sencha Cmd configuration properties
 
-- `".sencha/app/${build.environment}.properties"`
+- `.sencha/app/${build.environment}.properties`: Based on the value of the build.environment properties, exactly one of the following will be loaded. Setting properties in these files allow you to have different values for properties based on the type of build being run.
   - ".sencha/app/native.properties"
   - ".sencha/app/package.properties"
   - ".sencha/app/production.properties"
   - ".sencha/app/testing.properties"
 
-- `".sencha/app/build.properties"`
-  - => ⁨Users⁩/ipek⁩/bin⁩/Sencha⁩/Cmd⁩/6.7.0.63⁩/ant⁩/build⁩/app⁩/build.properties
-- `".sencha/app/defaults.properties"`
-  - => Users⁩/ipek⁩/bin⁩/Sencha⁩/Cmd⁩/6.7.0.63⁩/ant⁩/build⁩/app⁩/defaults.properties
+- `.sencha/app/build.properties`: These properties are loaded next and have lower priority over the build-environment-specific properties. These are properties that are used by all (or most) environments. This file is intended for customization.
+
+  => ⁨Users⁩/myname/bin⁩/Sencha⁩/Cmd⁩/6.7.0.63⁩/ant⁩/build⁩/app⁩/build.properties
+
+- `".sencha/app/defaults.properties"`:  These properties are the last (default) values to load. This file is "owned" by Sencha Cmd and will be updated each release as new properties are added. This file serves as a reference for the defined set of build properties but should not be edited; edit any of the other files instead.
+
+  => Users⁩/myname/bin⁩/Sencha⁩/Cmd⁩/6.7.0.63⁩/ant⁩/build⁩/app⁩/defaults.properties
+
+The only properties that have higher priority than `local.properties` are those passed in via the `command line`.
 
 #### Changing the place of generated files for development (move them under the folder named 'generatedFiles')
 
@@ -202,7 +217,7 @@ Do not make the same changes for the `"output"` entry which affects the **produc
      */
     "production": {
         "output": {
-            "base": "/Users/ipek/Sites/sencha/${app.name}",
+            "base": "/Users/myname/Sites/sencha/${app.name}",
             "appCache": {
                 "enable": false,
                 "path": "cache.appcache"
@@ -230,15 +245,15 @@ Sencha Cmd v6.7.0.63
 [INF] Loading compiler context
 [INF] Processing data with ClosureCompressor
 [INF] JavaScript input level is NEXT and output level is ES5
-[INF] Writing concatenated output to file /Users/ipek/Documents/workspace/sencha/empty_ws/packages/local/utils/build/utils-debug.js
+[INF] Writing concatenated output to file /Users/myname/Documents/workspace/sencha/empty_ws/packages/local/utils/build/utils-debug.js
 [INF] Processing data with CmdJavascriptCompressor
 [INF] JavaScript input level is NEXT and output level is ES5
-[INF] Writing concatenated output to file /Users/ipek/Documents/workspace/sencha/empty_ws/packages/local/utils/build/utils.js
-[INF] merging 1 input resources into /Users/ipek/Documents/workspace/sencha/empty_ws/packages/local/utils/build/resources
-[INF] merged 1 resources into /Users/ipek/Documents/workspace/sencha/empty_ws/packages/local/utils/build/resources
-[INF] merging 0 input resources into /Users/ipek/Documents/workspace/sencha/empty_ws/packages/local/utils/build
-[INF] merged 0 resources into /Users/ipek/Documents/workspace/sencha/empty_ws/packages/local/utils/build
-[INF] Processing examples in "/Users/ipek/Documents/workspace/sencha/empty_ws/packages/local/utils/examples" (/Users/ipek/Documents/workspace/sencha/empty_ws/packages/local/utils/examples)
+[INF] Writing concatenated output to file /Users/myname/Documents/workspace/sencha/empty_ws/packages/local/utils/build/utils.js
+[INF] merging 1 input resources into /Users/myname/Documents/workspace/sencha/empty_ws/packages/local/utils/build/resources
+[INF] merged 1 resources into /Users/myname/Documents/workspace/sencha/empty_ws/packages/local/utils/build/resources
+[INF] merging 0 input resources into /Users/myname/Documents/workspace/sencha/empty_ws/packages/local/utils/build
+[INF] merged 0 resources into /Users/myname/Documents/workspace/sencha/empty_ws/packages/local/utils/build
+[INF] Processing examples in "/Users/myname/Documents/workspace/sencha/empty_ws/packages/local/utils/examples" (/Users/myname/Documents/workspace/sencha/empty_ws/packages/local/utils/examples)
 ```
 
 2.) If a package is not empty (it has an Ext JS framework dependant code), but does not have any toolkit or theme dependency, we have to make following changes to be able to build the package:
@@ -328,139 +343,143 @@ Sencha Cmd v6.7.0.63
 
 #### Sencha Cmd Apps: Classic/Modern
 
-    /${app.name}  
-      /app  
-        /model
-        /store
-        /view
-        Application.js
-        Application.scss
+/${app.name}  
+  /app  
+    /model
+    /store
+    /view
+    Application.js
+    Application.scss
 
-      /resources
+  /resources
 
-    app.js
-    app.json
+app.js
+app.json
 
 #### Sencha Cmd Apps: Universal
 
-    /${app.name}  
-      /app  
-        /model
-        /store
-        /view
-        Application.js
-        Application.scss
+/${app.name}  
+  /app  
+    /model
+    /store
+    /view
+    Application.js
+    Application.scss
 
-      /resources
+  /resources
 
-      /classic
-        /resources
-        /src
+  /classic
+    /resources
+    /src
 
-      /modern
-        /resources
-        /src
+  /modern
+    /resources
+    /src
 
-    app.js
-    app.json
+app.js
+app.json
 
 ### Open Tooling Apps
 
-Open tooling apps, even though they have one build profile, they have this profile defined in the `builds` configuration of `app.json`.
+Even though open tooling apps have one build profile, they have this profile defined in the `builds` configuration of `app.json`.
 
 It seems like, even though an app is generated as having a one toolkit or one platform, it is structurally more ready to be extended to add another toolkit/platform.
 
 #### Open Tooling Apps: Classic/Modern
 
-    /${app.name}
-      /app
-        /desktop
-          /src
-            /model
-            /store
-            /view
-            /util
-            Application.js
-            Application.scss
+```bash
+/${app.name}
+  /app
+    /desktop
+      /src
+        /model
+        /store
+        /view
+        /util
+        Application.js
+        Application.scss
 
-          /sass
-            src.scss
-            var.scss
+      /sass
+        src.scss
+        var.scss
 
-          /overrides
+      /overrides
 
-        /shared
-          /src
-            /model
-            /store
-            /view
-            /util
+    /shared
+      /src
+        /model
+        /store
+        /view
+        /util
 
-          /sass
-            src.scss
-            var.scss
+      /sass
+        src.scss
+        var.scss
 
-          /overrides
+      /overrides
 
-      /resources
+  /resources
 
-    app.js
-    app.json
+app.js
+app.json
+```
 
 #### Open Tooling Apps: Universal
 
-    /${app.name}
-      /app
-        /desktop
-          /src
-            /model
-            /store
-            /view
-            /util
-            Application.js
-            Application.scss
+```bash
+/${app.name}
+  /app
+    /desktop
+      /src
+        /model
+        /store
+        /view
+        /util
+        Application.js
+        Application.scss
 
-          /sass
-            src.scss
-            var.scss
+      /sass
+        src.scss
+        var.scss
 
-          /overrides
+      /overrides
 
-        /phone
-          /src
-            /model
-            /store
-            /view
-            /util
-            Application.js
-            Application.scss
+    /phone
+      /src
+        /model
+        /store
+        /view
+        /util
+        Application.js
+        Application.scss
 
-          /sass
-            src.scss
-            var.scss
+      /sass
+        src.scss
+        var.scss
 
-          /overrides
+      /overrides
 
-        /shared
-          /src
-            /model
-            /store
-            /view
-            /util
+    /shared
+      /src
+        /model
+        /store
+        /view
+        /util
 
-          /sass
-            src.scss
-            var.scss
+      /sass
+        src.scss
+        var.scss
 
-          /overrides
+      /overrides
 
-      /resources
-        /desktop
-        /phone
-        /shared
+  /resources
+    /desktop
+    /phone
+    /shared
 
-    app.js
-    app.json
+app.js
+app.json
+```
 
 ## Inner Workings of Sencha Cmd
 
@@ -1515,7 +1534,7 @@ As we see, the contents from `classic/resources` folder are deeply copied to the
 
 ![Universal App build output classic tookit folder structure with resource override](./universal-app/docs/toolkit_resource_build_modern_folder.png)
 
-##### A Universal Application example of with using package resources
+##### A Universal Application example with using package resources
 
 For this example we will use the _lib-resource_ package that we have used before in the previous demonstrations. It has three images under `resources/images`folder:
 
